@@ -39,9 +39,15 @@
         "mockery/mockery": "0.9.*|^1.0",
         "phpunit/phpunit": "^8.5|^9.0",
         "orchestra/testbench": "~4.0|~5.0|~6.0|~7.0",
-        "brackets/translatable": "^2.0",
+        "dejwcake/craftable-translatable": "dev-main",
         "fakerphp/faker": "^1.19"
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/dejwCake/craftable-translatable.git"
+        }
+    ],
     "autoload": {
         "classmap": [],
         "psr-4": {
@@ -58,9 +64,6 @@
             "providers": [
                 "Brackets\\AdminListing\\AdminListingServiceProvider"
             ]
-        },
-        "branch-alias": {
-            "dev-master": "3.0-dev"
         }
     }
 }
