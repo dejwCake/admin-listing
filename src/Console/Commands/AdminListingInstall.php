@@ -24,9 +24,9 @@ class AdminListingInstall extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $this->alterEncryptCookiesMiddleware();
 
@@ -39,7 +39,7 @@ class AdminListingInstall extends Command
         return File::put($fileName, str_replace($find, $replaceWith, $content));
     }
 
-    private function alterEncryptCookiesMiddleware()
+    private function alterEncryptCookiesMiddleware(): void
     {
         // change app/Http/Middleware/EncryptCookies to accept frontend-generated 'per_page' cookie from vue
         $this->strReplaceInFile(

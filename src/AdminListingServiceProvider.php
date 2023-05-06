@@ -4,6 +4,7 @@ namespace Brackets\AdminListing;
 
 use Brackets\AdminListing\Console\Commands\AdminListingInstall;
 use Brackets\AdminListing\Facades\AdminListing as AdminListingFacade;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
 class AdminListingServiceProvider extends ServiceProvider
@@ -20,7 +21,7 @@ class AdminListingServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->commands([
             AdminListingInstall::class,
@@ -32,11 +33,11 @@ class AdminListingServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->bind('admin-listing', AdminListing::class);
 
-        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        $loader = AliasLoader::getInstance();
         $loader->alias('AdminListing', AdminListingFacade::class);
     }
 
