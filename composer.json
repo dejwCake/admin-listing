@@ -65,5 +65,8 @@
                 "Brackets\\AdminListing\\AdminListingServiceProvider"
             ]
         }
+    },
+    "branch-alias": {
+        "dev-master": "1.0"
     }
 }
