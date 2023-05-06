@@ -1,5 +1,5 @@
 {
-    "name": "brackets/admin-listing",
+    "name": "dejwcake/admin-listing",
     "description": "Query-building helper for listing of Eloquent models",
     "keywords": [
         "listing",
