@@ -4,24 +4,19 @@ AdminListing is a helper that simplifies administration listing for your Eloquen
 
 You can find full documentation at https://docs.getcraftable.com/#/admin-listing
 
-## Testing
+## Run tests
 
-In order to run tests, this package requires a PostgreSQL database running (SQLite is not enough for this package). You can use one that is shipped with docker running:
+To run tests use this docker environment.
 
-```
-docker-compose up -d
-``` 
-
-and then run tests:
-
-```
-./vendor/bin/phpunit
+```shell
+  docker-compose run -it test vendor/bin/phpunit
 ```
 
-To stop the server use:
+To switch between postgresql and mariadb change in `docker-compose.yml` DB_CONNECTION environmental variable:
 
-```
-docker-compose down
+```git
+- DB_CONNECTION: pgsql
++ DB_CONNECTION: mysql
 ```
 
 ## Issues

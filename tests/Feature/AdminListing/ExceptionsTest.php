@@ -5,14 +5,15 @@ namespace Brackets\AdminListing\Tests\Feature\AdminListing;
 use Brackets\AdminListing\AdminListing;
 use Brackets\AdminListing\Exceptions\NotAModelClassException;
 use Brackets\AdminListing\Tests\TestCase;
+use Brackets\AdminListing\Tests\TestNotAModel;
 
 class ExceptionsTest extends TestCase
 {
     /** @test */
-    public function creating_listing_for_a_class_that_is_not_a_model_should_lead_to_an_exception()
+    public function creating_listing_for_a_class_that_is_not_a_model_should_lead_to_an_exception(): void
     {
         try {
-            AdminListing::create(static::class);
+            AdminListing::create(TestNotAModel::class);
         } catch (NotAModelClassException $e) {
             $this->assertTrue(true);
             return ;

@@ -6,6 +6,7 @@ use Brackets\AdminListing\AdminListing;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
+use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as Test;
 
 abstract class TestCase extends Test
@@ -14,17 +15,17 @@ abstract class TestCase extends Test
     /**
      * @var Model
      */
-    protected $testModel;
+    protected Model $testModel;
 
     /**
      * @var AdminListing
      */
-    protected $listing;
+    protected AdminListing $listing;
 
     /**
      * @var AdminListing
      */
-    protected $translatedListing;
+    protected AdminListing $translatedListing;
 
     public function setUp(): void
     {
@@ -34,27 +35,50 @@ abstract class TestCase extends Test
         $this->translatedListing = AdminListing::create(TestTranslatableModel::class);
     }
 
-    protected function getEnvironmentSetUp($app)
+    protected function getEnvironmentSetUp($app): void
     {
-        $app['config']->set('database.default', 'pgsql');
-        $app['config']->set('database.connections.pgsql', [
-            'driver' => 'pgsql',
-            'host' => '127.0.0.1',
-            'port' => env('DOCKER_PGSQL_TEST_PORT', '5555'),
-            'database' => 'testing',
-            'username' => 'testing',
-            'password' => 'secret',
-            'charset' => 'utf8',
-            'prefix' => '',
-            'schema' => 'public',
-            'sslmode' => 'prefer',
-        ]);
+        if (env('DB_CONNECTION') === 'pgsql') {
+            $app['config']->set('database.default', 'pgsql');
+            $app['config']->set('database.connections.pgsql', [
+                'driver' => 'pgsql',
+                'host' => 'pgsql',
+                'port' => '5432',
+                'database' => env('DB_DATABASE', 'laravel'),
+                'username' => env('DB_USERNAME', 'root'),
+                'password' => env('DB_PASSWORD', 'bestsecret'),
+                'charset' => 'utf8',
+                'prefix' => '',
+                'schema' => 'public',
+                'sslmode' => 'prefer',
+            ]);
+        } else if (env('DB_CONNECTION') === 'mysql') {
+            $app['config']->set('database.default', 'mysql');
+            $app['config']->set('database.connections.mysql', [
+                'driver' => 'mysql',
+                'host' => 'mysql',
+                'port' => '3306',
+                'database' => env('DB_DATABASE', 'laravel'),
+                'username' => env('DB_USERNAME', 'root'),
+                'password' => env('DB_PASSWORD', 'bestsecret'),
+                'charset' => 'utf8',
+                'prefix' => '',
+                'schema' => 'public',
+                'sslmode' => 'prefer',
+            ]);
+        } else {
+            $app['config']->set('database.default', 'sqlite');
+            $app['config']->set('database.connections.sqlite', [
+                'driver' => 'sqlite',
+                'database' => ':memory:',
+                'prefix' => '',
+            ]);
+        }
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param Application $app
      */
-    protected function setUpDatabase($app)
+    protected function setUpDatabase(Application $app): void
     {
         /** @var Builder $schema */
         $schema = $app['db']->connection()->getSchemaBuilder();
@@ -76,10 +100,10 @@ abstract class TestCase extends Test
 
         collect(range(2, 10))->each(function ($i) {
             TestModel::create([
-                'name' => 'Zeta '.$i,
+                'name' => 'Zeta ' . $i,
                 'color' => 'yellow',
                 'number' => $i,
-                'published_at' => (1998+$i).'-01-01 00:00:00',
+                'published_at' => (1998 + $i) . '-01-01 00:00:00',
             ]);
         });
 
@@ -108,13 +132,13 @@ abstract class TestCase extends Test
         collect(range(2, 10))->each(function ($i) {
             TestTranslatableModel::create([
                 'name' => [
-                    'en' => 'Zeta '.$i,
+                    'en' => 'Zeta ' . $i,
                 ],
                 'color' => [
                     'en' => 'yellow',
                 ],
                 'number' => $i,
-                'published_at' => (1998+$i).'-01-01 00:00:00',
+                'published_at' => (1998 + $i) . '-01-01 00:00:00',
             ]);
         });
     }
