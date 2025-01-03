@@ -323,7 +323,7 @@ class AdminListing
         }
 
         // if empty string, then we don't search at all
-        $search = trim($this->search);
+        $search = trim((string) $this->search);
         if ($search === '') {
             return ;
         }
