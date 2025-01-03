@@ -6,8 +6,7 @@ use Brackets\AdminListing\Tests\TestCase;
 
 class BasicStuffTest extends TestCase
 {
-    /** @test */
-    public function listing_should_return_whole_collection_when_nothing_was_set()
+    public function testListingShouldReturnWholeCollectionWhenNothingWasSet()
     {
         $result = $this->listing
             ->get();
@@ -21,8 +20,7 @@ class BasicStuffTest extends TestCase
         $this->assertArrayHasKey('published_at', $model);
     }
 
-    /** @test */
-    public function listing_ability_to_specify_columns_to_filter()
+    public function testListingAbilityToSpecifyColumnsToFilter()
     {
         $result = $this->listing
             ->get(['name', 'color']);
@@ -36,8 +34,7 @@ class BasicStuffTest extends TestCase
         $this->assertArrayNotHasKey('published_at', $model);
     }
 
-    /** @test */
-    public function it_should_be_possible_to_run_same_query_twice()
+    public function testItShouldBePossibleToRunSameQueryTwice()
     {
         $this->listing
             ->get();

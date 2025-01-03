@@ -7,8 +7,7 @@ use Illuminate\Database\QueryException;
 
 class OrderingTest extends TestCase
 {
-    /** @test */
-    public function listing_should_provide_ability_to_sort_by_name()
+    public function testListingShouldProvideAbilityToSortByName()
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -17,8 +16,7 @@ class OrderingTest extends TestCase
         $this->assertEquals('Alpha', $result->first()->name);
     }
 
-    /** @test */
-    public function listing_should_provide_ability_to_change_sort_order()
+    public function listingShouldProvideAbilityToChangeSortOrder()
     {
         $result = $this->listing
             ->attachOrdering('name', 'desc')
@@ -28,8 +26,7 @@ class OrderingTest extends TestCase
         $this->assertEquals('Zeta 9', $result->first()->name);
     }
 
-    /** @test */
-    public function sorting_by_not_existing_column_should_lead_to_an_error()
+    public function testSortingByNotExistingColumnShouldLeadToAnError()
     {
         try {
             $this->listing
@@ -43,8 +40,7 @@ class OrderingTest extends TestCase
         $this->fail("Sorting by not existing column should lead to an exception");
     }
 
-    /** @test */
-    public function translated_listing_can_be_sorted_by_translated_column()
+    public function testTranslatedListingCanBeSortedByTranslatedColumn()
     {
         $result = $this->translatedListing
             ->attachOrdering('name->en')
@@ -58,8 +54,7 @@ class OrderingTest extends TestCase
         $this->assertEquals('red', $model->getTranslation('color', 'en'));
     }
 
-    /** @test */
-    public function translated_listing_supports_querying_only_some_columns()
+    public function testTranslatedListingSupportsQueryingOnlySomeColumns()
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -74,8 +69,7 @@ class OrderingTest extends TestCase
         $this->assertEquals(null, $model->getTranslation('color', 'en'));
     }
 
-    /** @test */
-    public function translated_listing_can_work_with_locales()
+    public function testTranslatedListingCanWorkWithLocales()
     {
         $result = $this->translatedListing
             ->attachOrdering('name')

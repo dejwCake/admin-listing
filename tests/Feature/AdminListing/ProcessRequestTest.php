@@ -10,8 +10,9 @@ class ProcessRequestTest extends TestCase
 {
     // TODO refactor this class - creates a fake route and remove all the request mocking
 
-    public function request_processing_with_nothing_sent()
+    public function testRequestProcessingWithNothingSent()
     {
+        self::markTestSkipped('Refactor needed');
         $request = Mockery::mock(Request::class);
 
         $request->shouldReceive('input')
@@ -45,8 +46,9 @@ class ProcessRequestTest extends TestCase
         $this->assertCount(10, $result);
     }
 
-    public function request_processing_with_ordering()
+    public function testRequestProcessingWithOrdering()
     {
+        self::markTestSkipped('Refactor needed');
         $request = Mockery::mock(Request::class);
 
         $request->shouldReceive('input')
@@ -82,8 +84,9 @@ class ProcessRequestTest extends TestCase
     }
 
 
-    public function request_processing_with_search()
+    public function testRequestProcessingWithSearch()
     {
+        self::markTestSkipped('Refactor needed');
         $request = Mockery::mock(Request::class);
 
         $request->shouldReceive('input')
@@ -118,8 +121,9 @@ class ProcessRequestTest extends TestCase
         $this->assertEquals('Zeta 10', $result->getCollection()->first()->name);
     }
 
-    public function request_processing_with_pagination_manipulated()
+    public function testRequestProcessingWithPaginationManipulated()
     {
+        self::markTestSkipped('Refactor needed');
         $request = Mockery::mock(Request::class);
 
         $request->shouldReceive('input')
@@ -156,8 +160,9 @@ class ProcessRequestTest extends TestCase
     }
 
 
-    public function request_processing_on_translatable_model_with_default_locale()
+    public function testRequestProcessingOnTranslatableModelWithDefaultLocale()
     {
+        self::markTestSkipped('Refactor needed');
         $request = Mockery::mock(Request::class);
 
         $request->shouldReceive('input')
@@ -193,8 +198,9 @@ class ProcessRequestTest extends TestCase
         $this->assertEquals('red', $result->getCollection()->first()->color);
     }
 
-    public function request_processing_on_translatable_model_with_sk_locale()
+    public function testRequestProcessingOnTranslatableModelWithSkLocale()
     {
+        self::markTestSkipped('Refactor needed');
         $request = Mockery::mock(Request::class);
 
         $request->shouldReceive('input')

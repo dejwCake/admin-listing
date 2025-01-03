@@ -6,8 +6,7 @@ use Brackets\AdminListing\Tests\TestCase;
 
 class SearchTest extends TestCase
 {
-    /** @test */
-    public function you_can_search_among_text_fields_and_id()
+    public function testYouCanSearchAmongTextFieldsAndId()
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -17,8 +16,7 @@ class SearchTest extends TestCase
         $this->assertCount(1, $result);
     }
 
-    /** @test */
-    public function searching_for_a_repeated_term()
+    public function testSearchingForARepeatedTerm()
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -28,8 +26,7 @@ class SearchTest extends TestCase
         $this->assertCount(9, $result);
     }
 
-    /** @test */
-    public function searching_not_existing_query_should_return_empty_response()
+    public function testSearchingNotExistingQueryShouldReturnEmptyResponse()
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -39,8 +36,7 @@ class SearchTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    /** @test */
-    public function searching_only_in_color()
+    public function testSearchingOnlyInColor()
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -50,8 +46,7 @@ class SearchTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    /** @test */
-    public function searching_a_number()
+    public function testSearchingANumber()
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -61,8 +56,7 @@ class SearchTest extends TestCase
         $this->assertCount(2, $result);
     }
 
-    /** @test */
-    public function translations_you_can_search_among_text_fields_and_id()
+    public function testTranslationsYouCanSearchAmongTextFieldsAndId()
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -72,8 +66,7 @@ class SearchTest extends TestCase
         $this->assertCount(1, $result);
     }
 
-    /** @test */
-    public function you_cannot_search_depending_on_a_different_locale()
+    public function testYouCannotSearchDependingOnADifferentLocale()
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -84,8 +77,7 @@ class SearchTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    /** @test */
-    public function searching_a_number_in_translated_model()
+    public function testSearchingANumberInTranslatedModel()
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -95,8 +87,7 @@ class SearchTest extends TestCase
         $this->assertCount(2, $result);
     }
 
-    /** @test */
-    public function searching_a_number_in_translated_model_for_sk()
+    public function testSearchingANumberInTranslatedModelForSk()
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -107,8 +98,7 @@ class SearchTest extends TestCase
         $this->assertCount(1, $result);
     }
 
-    /** @test */
-    public function searching_for_a_multiple_terms_zero()
+    public function testSearchingForAMultipleTermsZero()
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -118,8 +108,7 @@ class SearchTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    /** @test */
-    public function searching_for_a_multiple_terms_one()
+    public function testSearchingForAMultipleTermsOne()
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -129,8 +118,7 @@ class SearchTest extends TestCase
         $this->assertCount(1, $result);
     }
 
-    /** @test */
-    public function searching_for_a_multiple_terms_many()
+    public function testSearchingForAMultipleTermsMany()
     {
         $result = $this->translatedListing
             ->attachOrdering('name')

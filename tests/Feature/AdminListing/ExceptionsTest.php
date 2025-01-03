@@ -9,8 +9,7 @@ use Brackets\AdminListing\Tests\TestNotAModel;
 
 class ExceptionsTest extends TestCase
 {
-    /** @test */
-    public function creating_listing_for_a_class_that_is_not_a_model_should_lead_to_an_exception(): void
+    public function testCreatingListingForAClassThatIsNotAModelShouldLeadToAnException(): void
     {
         try {
             AdminListing::create(TestNotAModel::class);
@@ -22,8 +21,7 @@ class ExceptionsTest extends TestCase
         $this->fail('AdminListing should fail when trying to build for a non Model class');
     }
 
-    /** @test */
-    public function creating_listing_for_an_integer_class_should_lead_to_an_exception()
+    public function testCreatingListingForAnIntegerClassShouldLeadToAnException()
     {
         try {
             AdminListing::create(10);
@@ -35,8 +33,7 @@ class ExceptionsTest extends TestCase
         $this->fail('AdminListing should fail when trying to build for a non Model class');
     }
 
-    /** @test */
-    public function creating_listing_for_a_non_class_string_should_lead_to_an_exception()
+    public function testCreatingListingForANonClassStringShouldLeadToAnException()
     {
         try {
             AdminListing::create("Some string that is definitely not a class name");

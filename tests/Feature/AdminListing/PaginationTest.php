@@ -6,8 +6,7 @@ use Brackets\AdminListing\Tests\TestCase;
 
 class PaginationTest extends TestCase
 {
-    /** @test */
-    public function listing_provides_pagination()
+    public function testListingProvidesPagination()
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -22,8 +21,7 @@ class PaginationTest extends TestCase
         $this->assertEquals('Zeta 3', $result->getCollection()->first()->name);
     }
 
-    /** @test */
-    public function listing_pagination_works_on_translatable_model_too()
+    public function testListingPaginationWorksOnTranslatableModelToo()
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -38,8 +36,7 @@ class PaginationTest extends TestCase
         $this->assertEquals('Zeta 3', $result->getCollection()->first()->name);
     }
 
-    /** @test */
-    public function listing_pagination_works_on_translatable_model_with_locale_sk()
+    public function testListingPaginationWorksOnTranslatableModelWithLocaleSk()
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
