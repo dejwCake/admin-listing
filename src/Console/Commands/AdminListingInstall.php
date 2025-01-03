@@ -11,6 +11,7 @@ class AdminListingInstall extends Command
      * The name and signature of the console command.
      *
      * @var string
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
      */
     protected $signature = 'admin-listing:install';
 
@@ -18,6 +19,7 @@ class AdminListingInstall extends Command
      * The console command description.
      *
      * @var string
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
      */
     protected $description = 'Install a brackets/admin-listing package';
 

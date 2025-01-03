@@ -32,15 +32,15 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "illuminate/support": "^10.0"
+        "php": "^8.2",
+        "illuminate/support": "^11.37"
     },
     "require-dev": {
-        "dejwcake/craftable-translatable": "dev-main",
-        "fakerphp/faker": "^1.19",
-        "mockery/mockery": "^1.0",
-        "orchestra/testbench": "~8.5",
-        "phpunit/phpunit": "^10.1"
+        "dejwcake/craftable-translatable": "v1.x-dev",
+        "fakerphp/faker": "^1.24",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^9.9",
+        "phpunit/phpunit": "^11.5"
     },
     "autoload": {
         "psr-4": {
@@ -61,6 +61,6 @@
         }
     },
     "branch-alias": {
-        "dev-main": "0.9-dev"
+        "dev-main": "1.0-dev"
     }
 }
