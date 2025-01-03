@@ -248,7 +248,8 @@ class AdminListing
         }
 
         $translatable = false;
-        if (property_exists($this->model, 'translatable')
+        if (
+            property_exists($this->model, 'translatable')
             && is_array($this->model->translatable)
             && in_array($column, $this->model->translatable, true)
         ) {
