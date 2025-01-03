@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brackets\AdminListing\Tests\Feature\AdminListing;
 
 use Brackets\AdminListing\Tests\TestCase;
 
 class BasicStuffTest extends TestCase
 {
-    public function testListingShouldReturnWholeCollectionWhenNothingWasSet()
+    public function testListingShouldReturnWholeCollectionWhenNothingWasSet(): void
     {
         $result = $this->listing
             ->get();
@@ -20,7 +22,7 @@ class BasicStuffTest extends TestCase
         self::assertArrayHasKey('published_at', $model);
     }
 
-    public function testListingAbilityToSpecifyColumnsToFilter()
+    public function testListingAbilityToSpecifyColumnsToFilter(): void
     {
         $result = $this->listing
             ->get(['name', 'color']);
@@ -34,7 +36,7 @@ class BasicStuffTest extends TestCase
         self::assertArrayNotHasKey('published_at', $model);
     }
 
-    public function testItShouldBePossibleToRunSameQueryTwice()
+    public function testItShouldBePossibleToRunSameQueryTwice(): void
     {
         $this->listing
             ->get();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brackets\AdminListing\Tests;
 
 use Brackets\Translatable\Models\WithTranslations;
@@ -29,7 +31,8 @@ class TestTranslatableModel extends Model implements WithTranslations
     public $timestamps = false;
 
     // these attributes are translatable
-    public $translatable = [
+    /** @var array<string> */
+    public array $translatable = [
         'name',
         'color',
     ];

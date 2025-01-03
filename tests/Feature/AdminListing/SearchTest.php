@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brackets\AdminListing\Tests\Feature\AdminListing;
 
 use Brackets\AdminListing\Tests\TestCase;
 
 class SearchTest extends TestCase
 {
-    public function testYouCanSearchAmongTextFieldsAndId()
+    public function testYouCanSearchAmongTextFieldsAndId(): void
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -16,7 +18,7 @@ class SearchTest extends TestCase
         self::assertCount(1, $result);
     }
 
-    public function testSearchingForARepeatedTerm()
+    public function testSearchingForARepeatedTerm(): void
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -26,7 +28,7 @@ class SearchTest extends TestCase
         self::assertCount(9, $result);
     }
 
-    public function testSearchingNotExistingQueryShouldReturnEmptyResponse()
+    public function testSearchingNotExistingQueryShouldReturnEmptyResponse(): void
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -36,7 +38,7 @@ class SearchTest extends TestCase
         self::assertCount(0, $result);
     }
 
-    public function testSearchingOnlyInColor()
+    public function testSearchingOnlyInColor(): void
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -46,7 +48,7 @@ class SearchTest extends TestCase
         self::assertCount(0, $result);
     }
 
-    public function testSearchingANumber()
+    public function testSearchingANumber(): void
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -56,7 +58,7 @@ class SearchTest extends TestCase
         self::assertCount(2, $result);
     }
 
-    public function testTranslationsYouCanSearchAmongTextFieldsAndId()
+    public function testTranslationsYouCanSearchAmongTextFieldsAndId(): void
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -66,7 +68,7 @@ class SearchTest extends TestCase
         self::assertCount(1, $result);
     }
 
-    public function testYouCannotSearchDependingOnADifferentLocale()
+    public function testYouCannotSearchDependingOnADifferentLocale(): void
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -77,7 +79,7 @@ class SearchTest extends TestCase
         self::assertCount(0, $result);
     }
 
-    public function testSearchingANumberInTranslatedModel()
+    public function testSearchingANumberInTranslatedModel(): void
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -87,7 +89,7 @@ class SearchTest extends TestCase
         self::assertCount(2, $result);
     }
 
-    public function testSearchingANumberInTranslatedModelForSk()
+    public function testSearchingANumberInTranslatedModelForSk(): void
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -98,7 +100,7 @@ class SearchTest extends TestCase
         self::assertCount(1, $result);
     }
 
-    public function testSearchingForAMultipleTermsZero()
+    public function testSearchingForAMultipleTermsZero(): void
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -108,7 +110,7 @@ class SearchTest extends TestCase
         self::assertCount(0, $result);
     }
 
-    public function testSearchingForAMultipleTermsOne()
+    public function testSearchingForAMultipleTermsOne(): void
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -118,7 +120,7 @@ class SearchTest extends TestCase
         self::assertCount(1, $result);
     }
 
-    public function testSearchingForAMultipleTermsMany()
+    public function testSearchingForAMultipleTermsMany(): void
     {
         $result = $this->translatedListing
             ->attachOrdering('name')

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brackets\AdminListing;
 
 use Brackets\AdminListing\Console\Commands\AdminListingInstall;
@@ -36,7 +38,6 @@ class AdminListingServiceProvider extends ServiceProvider implements DeferrableP
 
         $loader = AliasLoader::getInstance();
         $loader->alias('AdminListing', AdminListingFacade::class);
-
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brackets\AdminListing\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -25,8 +27,6 @@ class AdminListingInstall extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
     public function handle(): void
     {
@@ -38,6 +38,7 @@ class AdminListingInstall extends Command
     private function strReplaceInFile(string $fileName, string $find, string $replaceWith): int|bool
     {
         $content = File::get($fileName);
+
         return File::put($fileName, str_replace($find, $replaceWith, $content));
     }
 
@@ -47,7 +48,7 @@ class AdminListingInstall extends Command
         $this->strReplaceInFile(
             app_path('Http/Middleware/EncryptCookies.php'),
             "//",
-            "'per_page'"
+            "'per_page'",
         );
     }
 }

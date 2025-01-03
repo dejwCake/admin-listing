@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brackets\AdminListing\Tests\Feature\AdminListing;
 
 use Brackets\AdminListing\Tests\TestCase;
@@ -7,7 +9,7 @@ use Illuminate\Database\QueryException;
 
 class OrderingTest extends TestCase
 {
-    public function testListingShouldProvideAbilityToSortByName()
+    public function testListingShouldProvideAbilityToSortByName(): void
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -16,7 +18,7 @@ class OrderingTest extends TestCase
         self::assertEquals('Alpha', $result->first()->name);
     }
 
-    public function listingShouldProvideAbilityToChangeSortOrder()
+    public function listingShouldProvideAbilityToChangeSortOrder(): void
     {
         $result = $this->listing
             ->attachOrdering('name', 'desc')
@@ -26,21 +28,22 @@ class OrderingTest extends TestCase
         self::assertEquals('Zeta 9', $result->first()->name);
     }
 
-    public function testSortingByNotExistingColumnShouldLeadToAnError()
+    public function testSortingByNotExistingColumnShouldLeadToAnError(): void
     {
         try {
             $this->listing
                 ->attachOrdering('not_existing_column_name')
                 ->get();
-        } catch (QueryException $e) {
+        } catch (QueryException) {
             self::assertTrue(true);
+
             return ;
         }
 
         $this->fail("Sorting by not existing column should lead to an exception");
     }
 
-    public function testTranslatedListingCanBeSortedByTranslatedColumn()
+    public function testTranslatedListingCanBeSortedByTranslatedColumn(): void
     {
         $result = $this->translatedListing
             ->attachOrdering('name->en')
@@ -54,7 +57,7 @@ class OrderingTest extends TestCase
         self::assertEquals('red', $model->getTranslation('color', 'en'));
     }
 
-    public function testTranslatedListingSupportsQueryingOnlySomeColumns()
+    public function testTranslatedListingSupportsQueryingOnlySomeColumns(): void
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -69,7 +72,7 @@ class OrderingTest extends TestCase
         self::assertEquals(null, $model->getTranslation('color', 'en'));
     }
 
-    public function testTranslatedListingCanWorkWithLocales()
+    public function testTranslatedListingCanWorkWithLocales(): void
     {
         $result = $this->translatedListing
             ->attachOrdering('name')

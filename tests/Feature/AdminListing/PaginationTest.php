@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brackets\AdminListing\Tests\Feature\AdminListing;
 
 use Brackets\AdminListing\Tests\TestCase;
 
 class PaginationTest extends TestCase
 {
-    public function testListingProvidesPagination()
+    public function testListingProvidesPagination(): void
     {
         $result = $this->listing
             ->attachOrdering('name')
@@ -21,7 +23,7 @@ class PaginationTest extends TestCase
         self::assertEquals('Zeta 3', $result->getCollection()->first()->name);
     }
 
-    public function testListingPaginationWorksOnTranslatableModelToo()
+    public function testListingPaginationWorksOnTranslatableModelToo(): void
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
@@ -36,7 +38,7 @@ class PaginationTest extends TestCase
         self::assertEquals('Zeta 3', $result->getCollection()->first()->name);
     }
 
-    public function testListingPaginationWorksOnTranslatableModelWithLocaleSk()
+    public function testListingPaginationWorksOnTranslatableModelWithLocaleSk(): void
     {
         $result = $this->translatedListing
             ->attachOrdering('name')

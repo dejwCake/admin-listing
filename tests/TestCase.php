@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brackets\AdminListing\Tests;
 
 use Brackets\AdminListing\AdminListing;
@@ -13,25 +15,16 @@ use Orchestra\Testbench\TestCase as Test;
 
 abstract class TestCase extends Test
 {
-
-    /**
-     * @var Model
-     */
     protected Model $testModel;
 
-    /**
-     * @var AdminListing
-     */
     protected AdminListing $listing;
 
-    /**
-     * @var AdminListing
-     */
     protected AdminListing $translatedListing;
 
     public function setUp(): void
     {
         parent::setUp();
+
         $this->setUpDatabase($this->app);
         $this->listing = AdminListing::create(TestModel::class);
         $this->translatedListing = AdminListing::create(TestTranslatableModel::class);
@@ -82,15 +75,12 @@ abstract class TestCase extends Test
         }
     }
 
-    /**
-     * @param Application $app
-     */
     protected function setUpDatabase(Application $app): void
     {
-        /** @var Builder $schema */
         $schema = $app['db']->connection()->getSchemaBuilder();
+        \assert($schema instanceof Builder);
         $schema->dropIfExists('test_models');
-        $schema->create('test_models', function (Blueprint $table) {
+        $schema->create('test_models', static function (Blueprint $table): void {
             $table->increments('id');
             $table->string('name');
             $table->string('color');
@@ -105,7 +95,7 @@ abstract class TestCase extends Test
             'published_at' => '2000-06-01 00:00:00',
         ]);
 
-        (new Collection(range(2, 10)))->each(function ($i) {
+        (new Collection(range(2, 10)))->each(static function ($i): void {
             TestModel::create([
                 'name' => 'Zeta ' . $i,
                 'color' => 'yellow',
@@ -115,7 +105,7 @@ abstract class TestCase extends Test
         });
 
         $schema->dropIfExists('test_translatable_models');
-        $schema->create('test_translatable_models', function (Blueprint $table) {
+        $schema->create('test_translatable_models', static function (Blueprint $table): void {
             $table->increments('id');
             $table->integer('number');
             $table->dateTime('published_at');
@@ -136,7 +126,7 @@ abstract class TestCase extends Test
             'published_at' => '2000-06-01 00:00:00',
         ]);
 
-        (new Collection(range(2, 10)))->each(function ($i) {
+        (new Collection(range(2, 10)))->each(static function ($i): void {
             TestTranslatableModel::create([
                 'name' => [
                     'en' => 'Zeta ' . $i,

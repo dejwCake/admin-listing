@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brackets\AdminListing\Tests\Feature\AdminListing;
 
 use Brackets\AdminListing\AdminListing;
@@ -13,8 +15,9 @@ class ExceptionsTest extends TestCase
     {
         try {
             AdminListing::create(TestNotAModel::class);
-        } catch (NotAModelClassException $e) {
+        } catch (NotAModelClassException) {
             self::assertTrue(true);
+
             return ;
         }
 
@@ -25,8 +28,9 @@ class ExceptionsTest extends TestCase
     {
         try {
             AdminListing::create(10);
-        } catch (NotAModelClassException $e) {
+        } catch (NotAModelClassException) {
             self::assertTrue(true);
+
             return ;
         }
 
@@ -38,9 +42,11 @@ class ExceptionsTest extends TestCase
         try {
             AdminListing::create("Some string that is definitely not a class name");
 
-            // this time we are not checking a NotAModelClassException exception, because it is going to fail a bit earlier
-        } catch (\Exception $e) {
+            // this time we are not checking a NotAModelClassException exception,
+            // because it is going to fail a bit earlier
+        } catch (\Throwable) {
             self::assertTrue(true);
+
             return ;
         }
 

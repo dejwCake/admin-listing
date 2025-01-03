@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brackets\AdminListing;
 
 use Brackets\AdminListing\Exceptions\NotAModelClassException;
@@ -42,7 +44,7 @@ class AdminListing
 
     public static function create(string $modelName): self
     {
-        return (new static)->setModel($modelName);
+        return (new static())->setModel($modelName);
     }
 
     /**
@@ -74,22 +76,6 @@ class AdminListing
     }
 
     /**
-     * Init properties
-     */
-    private function init(): void
-    {
-        $withTranslationsClassName = config('admin-listing.with-translations-class');
-        if ($this->model instanceof $withTranslationsClassName) {
-            $this->modelHasTranslations = true;
-            $this->locale = $this->model->locale ?: app()->getLocale();
-        }
-
-        $this->query = $this->model->newQuery();
-
-        $this->orderBy = $this->model->getKeyName();
-    }
-
-    /**
      * Process request and get data
      *
      * You should always specify an array of columns that are about to be queried
@@ -105,26 +91,33 @@ class AdminListing
      *
      * This method does not perform any authorization nor validation.
      *
-     * @param array $searchIn array of columns which should be searched in (only text, character varying or primary key are allowed)
+     * array of columns which should be searched in (only text, character varying or primary key are allowed)
+     *
      * @throws Exception
-     * @return LengthAwarePaginator|Collection The result is either LengthAwarePaginator (when pagination was attached) or simple Collection otherwise
+     * The result is either LengthAwarePaginator (when pagination was attached) or simple Collection otherwise
      */
-    public function processRequestAndGet(Request $request, array $columns = ['*'], ?array $searchIn = null, ?callable $modifyQuery = null, ?string $locale = null): LengthAwarePaginator|Collection
-    {
+    public function processRequestAndGet(
+        Request $request,
+        array $columns = ['*'],
+        ?array $searchIn = null,
+        ?callable $modifyQuery = null,
+        ?string $locale = null,
+    ): LengthAwarePaginator|Collection {
         // process all the basic stuff
         $this->attachOrdering(
             $request->input('orderBy', $this->model->getKeyName()),
-            $request->input('orderDirection', 'asc')
+            $request->input('orderDirection', 'asc'),
         )->attachSearch(
             $request->input('search', null),
-            $searchIn
+            $searchIn,
         );
 
-        // we want to attach pagination if bulk filter is disabled otherwise we want to select all data without pagination
+        // we want to attach pagination if bulk filter is disabled
+        // otherwise we want to select all data without pagination
         if (!$request->input('bulk')) {
             $this->attachPagination(
                 (int) $request->input('page', 1),
-                (int) $request->input('per_page', $request->cookie('per_page', 10))
+                (int) $request->input('per_page', $request->cookie('per_page', 10)),
             );
         }
         // add custom modifications
@@ -158,6 +151,7 @@ class AdminListing
             throw new Exception('Model is not translatable, so you cannot set locale');
         }
         $this->locale = $locale;
+
         return $this;
     }
 
@@ -171,89 +165,24 @@ class AdminListing
     {
         $this->orderBy = $orderBy;
         $this->orderDirection = $orderDirection;
+
         return $this;
     }
-
-    /**
-     * Build order query
-     */
-    private function buildOrdering(): void
-    {
-        if ($this->modelHasTranslations()) {
-            $orderBy = $this->materializeColumnName($this->parseFullColumnName($this->orderBy), true);
-        } else {
-            $orderBy = $this->orderBy;
-        }
-
-        $this->query->orderBy($orderBy, $this->orderDirection);
-    }
-
 
     /**
      * Attach the searching functionality
      *
      * @param string $search searched string
-     * @param array<string> $searchIn array of columns which should be searched in (only text, character varying or primary key are allowed)
+     * array of columns which should be searched in (only text, character varying or primary key are allowed)
+     * @param array<string> $searchIn
      * @return $this
      */
     public function attachSearch(string $search, array $searchIn): self
     {
         $this->search = $search;
         $this->searchIn = $searchIn;
+
         return $this;
-    }
-
-    /**
-     * Build search query
-     */
-    private function buildSearch(): void
-    {
-        if (count($this->searchIn) === 0) {
-            return ;
-        }
-
-        // if empty string, then we don't search at all
-        $search = trim($this->search);
-        if ($search === '') {
-            return ;
-        }
-
-        $tokens = new Collection(explode(' ', $search));
-
-        $searchIn = (new Collection($this->searchIn))->map(function (string $column) {
-            return $this->parseFullColumnName($column);
-        });
-
-        // FIXME there is an issue, if you pass primary key as the only column to search in, it may not work properly
-
-        $tokens->each(function (string $token) use ($searchIn) {
-            $this->query->where(function (Builder $query) use ($token, $searchIn) {
-                $searchIn->each(function (array $column) use ($token, $query) {
-                    // FIXME try to find out how to customize this default behaviour
-                    if ($this->model->getKeyName() === $column['column'] && $this->model->getTable() === $column['table']) {
-                        if (is_numeric($token) && $token === strval(intval($token))) {
-                            $query->orWhere($this->materializeColumnName($column, true), intval($token));
-                        }
-                    } else {
-                        $this->searchLike($query, $column, $token);
-                    }
-                });
-            });
-        });
-    }
-
-    private function searchLike(Builder $query, array $column, string $token): void
-    {
-
-        // MySQL and SQLite uses 'like' pattern matching operator that is case insensitive
-        $likeOperator = 'like';
-
-        // but PostgreSQL uses 'ilike' pattern matching operator for this same functionality
-        if (DB::connection()->getDriverName() == 'pgsql') {
-            $likeOperator = 'ilike';
-        }
-
-        $query->orWhere($this->materializeColumnName($column, true), $likeOperator, '%'.$token.'%');
     }
 
     /**
@@ -283,13 +212,11 @@ class AdminListing
      * Execute query and get data
      *
      * @param array<string> $columns
-     * @return LengthAwarePaginator|Collection The result is either LengthAwarePaginator (when pagination was attached) or simple Collection otherwise
+     * The result is either LengthAwarePaginator (when pagination was attached) or simple Collection otherwise
      */
     public function get(array $columns = ['*']): LengthAwarePaginator|Collection
     {
-        $columns = (new Collection($columns))->map(function ($column) {
-            return $this->parseFullColumnName($column);
-        });
+        $columns = (new Collection($columns))->map(fn ($column) => $this->parseFullColumnName($column));
 
         $this->buildOrdering();
         $this->buildSearch();
@@ -297,32 +224,11 @@ class AdminListing
         return $this->buildPaginationAndGetResult($columns);
     }
 
-    private function buildPaginationAndGetResult(Collection $columns): LengthAwarePaginator|Collection
-    {
-        if ($this->hasPagination) {
-            $result = $this->query->paginate(
-                $this->perPage,
-                $this->materializeColumnNames($columns),
-                $this->pageColumnName,
-                $this->currentPage
-            )->withQueryString();
-            $this->processResultCollection($result->getCollection());
-        } else {
-            $result = $this->query->get($this->materializeColumnNames($columns));
-            $this->processResultCollection($result);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param Collection $collection
-     */
     protected function processResultCollection(Collection $collection): void
     {
         if ($this->modelHasTranslations()) {
             // we need to set this default locale ad hoc
-            $collection->each(function (Model $model) {
+            $collection->each(function (Model $model): void {
                 $model->setLocale($this->locale);
             });
         }
@@ -334,13 +240,13 @@ class AdminListing
     protected function parseFullColumnName(string $column): array
     {
         if (Str::contains($column, '.')) {
-            list($table, $column) = explode('.', $column, 2);
+            [$table, $column] = explode('.', $column, 2);
         } else {
             $table = $this->model->getTable();
         }
 
         $translatable = false;
-        if (is_array($this->model->translatable) && in_array($column, $this->model->translatable)) {
+        if (is_array($this->model->translatable) && in_array($column, $this->model->translatable, true)) {
             $translatable = true;
         }
 
@@ -352,12 +258,11 @@ class AdminListing
      */
     protected function materializeColumnName(array $column, bool $translated = false): string
     {
-        return $column['table'].'.'.$column['column'].($translated ? ($column['translatable'] ? '->'.$this->locale : '') : '');
+        return $column['table'] . '.'
+            . $column['column']
+            . ($translated ? ($column['translatable'] ? '->' . $this->locale : '') : '');
     }
 
-    /**
-     * @return bool
-     */
     protected function modelHasTranslations(): bool
     {
         return $this->modelHasTranslations;
@@ -368,8 +273,109 @@ class AdminListing
      */
     protected function materializeColumnNames(Collection $columns, bool $translated = false): array
     {
-        return $columns->map(function ($column) use ($translated) {
-            return $this->materializeColumnName($column, $translated);
-        })->toArray();
+        return $columns->map(fn ($column) => $this->materializeColumnName($column, $translated))->toArray();
+    }
+
+    /**
+     * Init properties
+     */
+    private function init(): void
+    {
+        $withTranslationsClassName = config('admin-listing.with-translations-class');
+        if ($this->model instanceof $withTranslationsClassName) {
+            $this->modelHasTranslations = true;
+            $this->locale = $this->model->locale ?: app()->getLocale();
+        }
+
+        $this->query = $this->model->newQuery();
+
+        $this->orderBy = $this->model->getKeyName();
+    }
+
+    /**
+     * Build order query
+     */
+    private function buildOrdering(): void
+    {
+        $orderBy = $this->modelHasTranslations()
+            ? $this->materializeColumnName(
+                $this->parseFullColumnName($this->orderBy),
+                true,
+            )
+            : $this->orderBy;
+
+        $this->query->orderBy($orderBy, $this->orderDirection);
+    }
+
+    /**
+     * Build search query
+     */
+    private function buildSearch(): void
+    {
+        if (count($this->searchIn) === 0) {
+            return ;
+        }
+
+        // if empty string, then we don't search at all
+        $search = trim($this->search);
+        if ($search === '') {
+            return ;
+        }
+
+        $tokens = new Collection(explode(' ', $search));
+
+        $searchIn = (new Collection($this->searchIn))->map(fn (string $column) => $this->parseFullColumnName($column));
+
+        // FIXME there is an issue, if you pass primary key as the only column to search in, it may not work properly
+
+        $tokens->each(function (string $token) use ($searchIn): void {
+            $this->query->where(function (Builder $query) use ($token, $searchIn): void {
+                $searchIn->each(function (array $column) use ($token, $query): void {
+                    // FIXME try to find out how to customize this default behaviour
+                    if (
+                        $this->model->getKeyName() === $column['column']
+                        && $this->model->getTable() === $column['table']
+                    ) {
+                        if (is_numeric($token) && $token === strval(intval($token))) {
+                            $query->orWhere($this->materializeColumnName($column, true), intval($token));
+                        }
+                    } else {
+                        $this->searchLike($query, $column, $token);
+                    }
+                });
+            });
+        });
+    }
+
+    private function searchLike(Builder $query, array $column, string $token): void
+    {
+
+        // MySQL and SQLite uses 'like' pattern matching operator that is case insensitive
+        $likeOperator = 'like';
+
+        // but PostgreSQL uses 'ilike' pattern matching operator for this same functionality
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            $likeOperator = 'ilike';
+        }
+
+        $query->orWhere($this->materializeColumnName($column, true), $likeOperator, '%' . $token . '%');
+    }
+
+    private function buildPaginationAndGetResult(Collection $columns): LengthAwarePaginator|Collection
+    {
+        if ($this->hasPagination) {
+            $result = $this->query->paginate(
+                $this->perPage,
+                $this->materializeColumnNames($columns),
+                $this->pageColumnName,
+                $this->currentPage,
+            )->withQueryString();
+            $this->processResultCollection($result->getCollection());
+        } else {
+            $result = $this->query->get($this->materializeColumnNames($columns));
+            $this->processResultCollection($result);
+        }
+
+        return $result;
     }
 }

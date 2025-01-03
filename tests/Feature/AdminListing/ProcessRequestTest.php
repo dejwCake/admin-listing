@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brackets\AdminListing\Tests\Feature\AdminListing;
 
 use Brackets\AdminListing\Tests\TestCase;
@@ -10,7 +12,7 @@ class ProcessRequestTest extends TestCase
 {
     // TODO refactor this class - creates a fake route and remove all the request mocking
 
-    public function testRequestProcessingWithNothingSent()
+    public function testRequestProcessingWithNothingSent(): void
     {
         self::markTestSkipped('Refactor needed');
         $request = Mockery::mock(Request::class);
@@ -46,7 +48,7 @@ class ProcessRequestTest extends TestCase
         self::assertCount(10, $result);
     }
 
-    public function testRequestProcessingWithOrdering()
+    public function testRequestProcessingWithOrdering(): void
     {
         self::markTestSkipped('Refactor needed');
         $request = Mockery::mock(Request::class);
@@ -83,8 +85,7 @@ class ProcessRequestTest extends TestCase
         self::assertEquals('Zeta 2', $result->getCollection()->first()->name);
     }
 
-
-    public function testRequestProcessingWithSearch()
+    public function testRequestProcessingWithSearch(): void
     {
         self::markTestSkipped('Refactor needed');
         $request = Mockery::mock(Request::class);
@@ -121,7 +122,7 @@ class ProcessRequestTest extends TestCase
         self::assertEquals('Zeta 10', $result->getCollection()->first()->name);
     }
 
-    public function testRequestProcessingWithPaginationManipulated()
+    public function testRequestProcessingWithPaginationManipulated(): void
     {
         self::markTestSkipped('Refactor needed');
         $request = Mockery::mock(Request::class);
@@ -159,8 +160,7 @@ class ProcessRequestTest extends TestCase
         self::assertEquals('Zeta 5', $result->getCollection()->first()->name);
     }
 
-
-    public function testRequestProcessingOnTranslatableModelWithDefaultLocale()
+    public function testRequestProcessingOnTranslatableModelWithDefaultLocale(): void
     {
         self::markTestSkipped('Refactor needed');
         $request = Mockery::mock(Request::class);
@@ -198,7 +198,7 @@ class ProcessRequestTest extends TestCase
         self::assertEquals('red', $result->getCollection()->first()->color);
     }
 
-    public function testRequestProcessingOnTranslatableModelWithSkLocale()
+    public function testRequestProcessingOnTranslatableModelWithSkLocale(): void
     {
         self::markTestSkipped('Refactor needed');
         $request = Mockery::mock(Request::class);
