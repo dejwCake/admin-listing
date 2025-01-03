@@ -37,7 +37,7 @@ class AdminListing
 
     protected string $orderDirection = 'asc';
 
-    protected string $search;
+    protected ?string $search;
 
     /** @var array<string> */
     protected array $searchIn = [];
@@ -108,7 +108,7 @@ class AdminListing
             $request->input('orderBy', $this->model->getKeyName()),
             $request->input('orderDirection', 'asc'),
         )->attachSearch(
-            $request->input('search', null),
+            $request->input('search'),
             $searchIn,
         );
 
@@ -172,12 +172,12 @@ class AdminListing
     /**
      * Attach the searching functionality
      *
-     * @param string $search searched string
+     * @param string|null $search searched string
      * array of columns which should be searched in (only text, character varying or primary key are allowed)
      * @param array<string> $searchIn
      * @return $this
      */
-    public function attachSearch(string $search, array $searchIn): self
+    public function attachSearch(?string $search, array $searchIn): self
     {
         $this->search = $search;
         $this->searchIn = $searchIn;
