@@ -12,6 +12,7 @@
     <arg name="extensions" value="php" />
     <arg value="p" />
 
+    <file>install-stubs/</file>
     <file>src/</file>
     <file>tests/</file>
 

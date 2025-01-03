@@ -35,7 +35,7 @@ class AdminListingInstall extends Command
         $this->info('Package brackets/admin-listing installed');
     }
 
-    private function strReplaceInFile($fileName, $find, $replaceWith)
+    private function strReplaceInFile(string $fileName, string $find, string $replaceWith): int|bool
     {
         $content = File::get($fileName);
         return File::put($fileName, str_replace($find, $replaceWith, $content));

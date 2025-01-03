@@ -2,10 +2,11 @@
 
 namespace Brackets\AdminListing\Tests;
 
+use Brackets\Translatable\Models\WithTranslations;
 use Brackets\Translatable\Traits\HasTranslations;
 use Illuminate\Database\Eloquent\Model;
 
-class TestTranslatableModel extends Model
+class TestTranslatableModel extends Model implements WithTranslations
 {
     use HasTranslations;
 

@@ -10,6 +10,7 @@ parameters:
     tmpDir: .phpstan.cache
 
     paths:
+        - ./install-stubs
         - ./src
         - ./tests
 

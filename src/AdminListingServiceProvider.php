@@ -26,6 +26,12 @@ class AdminListingServiceProvider extends ServiceProvider
         $this->commands([
             AdminListingInstall::class,
         ]);
+
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../install-stubs/config/admin-listing.php' => config_path('admin-listing.php'),
+            ], 'config');
+        }
     }
 
     /**
@@ -35,10 +41,12 @@ class AdminListingServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->mergeConfigFrom(__DIR__ . '/../install-stubs/config/admin-listing.php', 'admin-listing');
         $this->app->bind('admin-listing', AdminListing::class);
 
         $loader = AliasLoader::getInstance();
         $loader->alias('AdminListing', AdminListingFacade::class);
+
     }
 
     /**

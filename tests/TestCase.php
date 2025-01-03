@@ -3,6 +3,7 @@
 namespace Brackets\AdminListing\Tests;
 
 use Brackets\AdminListing\AdminListing;
+use Brackets\Translatable\Models\WithTranslations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
@@ -38,6 +39,7 @@ abstract class TestCase extends Test
 
     protected function getEnvironmentSetUp($app): void
     {
+        $app['config']->set('admin-listing.with-translations-class', WithTranslations::class);
         if (env('DB_CONNECTION') === 'pgsql') {
             $app['config']->set('database.default', 'pgsql');
             $app['config']->set('database.connections.pgsql', [
