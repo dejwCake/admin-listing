@@ -285,7 +285,7 @@ class AdminListing
      * @param array<string> $columns
      * @return LengthAwarePaginator|Collection The result is either LengthAwarePaginator (when pagination was attached) or simple Collection otherwise
      */
-    public function get(array $columns = ['*'])
+    public function get(array $columns = ['*']): LengthAwarePaginator|Collection
     {
         $columns = (new Collection($columns))->map(function ($column) {
             return $this->parseFullColumnName($column);

@@ -21,7 +21,7 @@ class ExceptionsTest extends TestCase
         $this->fail('AdminListing should fail when trying to build for a non Model class');
     }
 
-    public function testCreatingListingForAnIntegerClassShouldLeadToAnException()
+    public function testCreatingListingForAnIntegerClassShouldLeadToAnException(): void
     {
         try {
             AdminListing::create(10);
@@ -33,7 +33,7 @@ class ExceptionsTest extends TestCase
         $this->fail('AdminListing should fail when trying to build for a non Model class');
     }
 
-    public function testCreatingListingForANonClassStringShouldLeadToAnException()
+    public function testCreatingListingForANonClassStringShouldLeadToAnException(): void
     {
         try {
             AdminListing::create("Some string that is definitely not a class name");
@@ -44,6 +44,6 @@ class ExceptionsTest extends TestCase
             return ;
         }
 
-        $this->fail('AdminListing should fail when trying to build for a non Model class');
+        self::fail('AdminListing should fail when trying to build for a non Model class');
     }
 }

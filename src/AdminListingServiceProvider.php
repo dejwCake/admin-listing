@@ -4,22 +4,14 @@ namespace Brackets\AdminListing;
 
 use Brackets\AdminListing\Console\Commands\AdminListingInstall;
 use Brackets\AdminListing\Facades\AdminListing as AdminListingFacade;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
-class AdminListingServiceProvider extends ServiceProvider
+class AdminListingServiceProvider extends ServiceProvider implements DeferrableProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = true;
-
-    /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -36,8 +28,6 @@ class AdminListingServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -52,9 +42,9 @@ class AdminListingServiceProvider extends ServiceProvider
     /**
      * Get the services provided by the provider.
      *
-     * @return array
+     * @return array<int, string>
      */
-    public function provides()
+    public function provides(): array
     {
         return ['admin-listing'];
     }

@@ -37,6 +37,10 @@ abstract class TestCase extends Test
         $this->translatedListing = AdminListing::create(TestTranslatableModel::class);
     }
 
+    /**
+     * @param Application $app
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+     */
     protected function getEnvironmentSetUp($app): void
     {
         $app['config']->set('admin-listing.with-translations-class', WithTranslations::class);
