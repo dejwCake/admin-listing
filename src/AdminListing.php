@@ -44,7 +44,7 @@ class AdminListing
 
     public static function create(string $modelName): self
     {
-        return (new static())->setModel($modelName);
+        return (new self())->setModel($modelName);
     }
 
     /**
@@ -117,7 +117,7 @@ class AdminListing
         if (!$request->input('bulk')) {
             $this->attachPagination(
                 (int) $request->input('page', 1),
-                (int) $request->input('per_page', $request->cookie('per_page', 10)),
+                (int) $request->input('per_page', (int) $request->cookie('per_page', (string) 10)),
             );
         }
         // add custom modifications
@@ -229,7 +229,9 @@ class AdminListing
         if ($this->modelHasTranslations()) {
             // we need to set this default locale ad hoc
             $collection->each(function (Model $model): void {
-                $model->setLocale($this->locale);
+                if (method_exists($model, 'setLocale')) {
+                    $model->setLocale($this->locale);
+                }
             });
         }
     }
@@ -246,7 +248,10 @@ class AdminListing
         }
 
         $translatable = false;
-        if (is_array($this->model->translatable) && in_array($column, $this->model->translatable, true)) {
+        if (property_exists($this->model, 'translatable')
+            && is_array($this->model->translatable)
+            && in_array($column, $this->model->translatable, true)
+        ) {
             $translatable = true;
         }
 

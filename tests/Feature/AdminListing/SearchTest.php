@@ -52,7 +52,7 @@ class SearchTest extends TestCase
     {
         $result = $this->listing
             ->attachOrdering('name')
-            ->attachSearch(1, ['id', 'name'])
+            ->attachSearch((string) 1, ['id', 'name'])
             ->get();
 
         self::assertCount(2, $result);
@@ -83,7 +83,7 @@ class SearchTest extends TestCase
     {
         $result = $this->translatedListing
             ->attachOrdering('name')
-            ->attachSearch(1, ['id', 'name'])
+            ->attachSearch((string) 1, ['id', 'name'])
             ->get();
 
         self::assertCount(2, $result);
@@ -94,7 +94,7 @@ class SearchTest extends TestCase
         $result = $this->translatedListing
             ->attachOrdering('name')
             ->setLocale('sk')
-            ->attachSearch(1, ['id', 'name'])
+            ->attachSearch((string) 1, ['id', 'name'])
             ->get();
 
         self::assertCount(1, $result);

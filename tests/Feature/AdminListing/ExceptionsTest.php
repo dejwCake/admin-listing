@@ -27,7 +27,7 @@ class ExceptionsTest extends TestCase
     public function testCreatingListingForAnIntegerClassShouldLeadToAnException(): void
     {
         try {
-            AdminListing::create(10);
+            AdminListing::create((string) 10);
         } catch (NotAModelClassException) {
             self::assertTrue(true);
 
