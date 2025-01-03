@@ -11,13 +11,13 @@ class BasicStuffTest extends TestCase
         $result = $this->listing
             ->get();
 
-        $this->assertCount(10, $result);
+        self::assertCount(10, $result);
         $model = $result->first();
-        $this->assertArrayHasKey('id', $model);
-        $this->assertArrayHasKey('name', $model);
-        $this->assertArrayHasKey('color', $model);
-        $this->assertArrayHasKey('number', $model);
-        $this->assertArrayHasKey('published_at', $model);
+        self::assertArrayHasKey('id', $model);
+        self::assertArrayHasKey('name', $model);
+        self::assertArrayHasKey('color', $model);
+        self::assertArrayHasKey('number', $model);
+        self::assertArrayHasKey('published_at', $model);
     }
 
     public function testListingAbilityToSpecifyColumnsToFilter()
@@ -25,13 +25,13 @@ class BasicStuffTest extends TestCase
         $result = $this->listing
             ->get(['name', 'color']);
 
-        $this->assertCount(10, $result);
+        self::assertCount(10, $result);
         $model = $result->first();
-        $this->assertArrayNotHasKey('id', $model);
-        $this->assertArrayHasKey('name', $model);
-        $this->assertArrayHasKey('color', $model);
-        $this->assertArrayNotHasKey('number', $model);
-        $this->assertArrayNotHasKey('published_at', $model);
+        self::assertArrayNotHasKey('id', $model);
+        self::assertArrayHasKey('name', $model);
+        self::assertArrayHasKey('color', $model);
+        self::assertArrayNotHasKey('number', $model);
+        self::assertArrayNotHasKey('published_at', $model);
     }
 
     public function testItShouldBePossibleToRunSameQueryTwice()
@@ -42,12 +42,12 @@ class BasicStuffTest extends TestCase
         $result = $this->listing
             ->get();
 
-        $this->assertCount(10, $result);
+        self::assertCount(10, $result);
         $model = $result->first();
-        $this->assertArrayHasKey('id', $model);
-        $this->assertArrayHasKey('name', $model);
-        $this->assertArrayHasKey('color', $model);
-        $this->assertArrayHasKey('number', $model);
-        $this->assertArrayHasKey('published_at', $model);
+        self::assertArrayHasKey('id', $model);
+        self::assertArrayHasKey('name', $model);
+        self::assertArrayHasKey('color', $model);
+        self::assertArrayHasKey('number', $model);
+        self::assertArrayHasKey('published_at', $model);
     }
 }

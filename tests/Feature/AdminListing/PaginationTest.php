@@ -13,12 +13,12 @@ class PaginationTest extends TestCase
             ->attachPagination(2, 3)
             ->get();
 
-        $this->assertCount(3, $result->getCollection());
-        $this->assertEquals(10, $result->total());
-        $this->assertEquals(3, $result->perPage());
-        $this->assertEquals(2, $result->currentPage());
-        $this->assertEquals(4, $result->lastPage());
-        $this->assertEquals('Zeta 3', $result->getCollection()->first()->name);
+        self::assertCount(3, $result->getCollection());
+        self::assertEquals(10, $result->total());
+        self::assertEquals(3, $result->perPage());
+        self::assertEquals(2, $result->currentPage());
+        self::assertEquals(4, $result->lastPage());
+        self::assertEquals('Zeta 3', $result->getCollection()->first()->name);
     }
 
     public function testListingPaginationWorksOnTranslatableModelToo()
@@ -28,12 +28,12 @@ class PaginationTest extends TestCase
             ->attachPagination(2, 3)
             ->get();
 
-        $this->assertCount(3, $result->getCollection());
-        $this->assertEquals(10, $result->total());
-        $this->assertEquals(3, $result->perPage());
-        $this->assertEquals(2, $result->currentPage());
-        $this->assertEquals(4, $result->lastPage());
-        $this->assertEquals('Zeta 3', $result->getCollection()->first()->name);
+        self::assertCount(3, $result->getCollection());
+        self::assertEquals(10, $result->total());
+        self::assertEquals(3, $result->perPage());
+        self::assertEquals(2, $result->currentPage());
+        self::assertEquals(4, $result->lastPage());
+        self::assertEquals('Zeta 3', $result->getCollection()->first()->name);
     }
 
     public function testListingPaginationWorksOnTranslatableModelWithLocaleSk()
@@ -44,11 +44,11 @@ class PaginationTest extends TestCase
             ->attachPagination(1, 3)
             ->get();
 
-        $this->assertCount(3, $result->getCollection());
-        $this->assertEquals(10, $result->total());
-        $this->assertEquals(3, $result->perPage());
-        $this->assertEquals(1, $result->currentPage());
-        $this->assertEquals(4, $result->lastPage());
-        $this->assertEquals('Alfa', $result->getCollection()->first()->name);
+        self::assertCount(3, $result->getCollection());
+        self::assertEquals(10, $result->total());
+        self::assertEquals(3, $result->perPage());
+        self::assertEquals(1, $result->currentPage());
+        self::assertEquals(4, $result->lastPage());
+        self::assertEquals('Alfa', $result->getCollection()->first()->name);
     }
 }

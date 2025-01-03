@@ -13,7 +13,7 @@ class OrderingTest extends TestCase
             ->attachOrdering('name')
             ->get();
 
-        $this->assertEquals('Alpha', $result->first()->name);
+        self::assertEquals('Alpha', $result->first()->name);
     }
 
     public function listingShouldProvideAbilityToChangeSortOrder()
@@ -22,8 +22,8 @@ class OrderingTest extends TestCase
             ->attachOrdering('name', 'desc')
             ->get();
 
-        $this->assertEquals('Alpha', $result->last()->name);
-        $this->assertEquals('Zeta 9', $result->first()->name);
+        self::assertEquals('Alpha', $result->last()->name);
+        self::assertEquals('Zeta 9', $result->first()->name);
     }
 
     public function testSortingByNotExistingColumnShouldLeadToAnError()
@@ -33,7 +33,7 @@ class OrderingTest extends TestCase
                 ->attachOrdering('not_existing_column_name')
                 ->get();
         } catch (QueryException $e) {
-            $this->assertTrue(true);
+            self::assertTrue(true);
             return ;
         }
 
@@ -48,10 +48,10 @@ class OrderingTest extends TestCase
 
         $model = $result->first();
 
-        $this->assertEquals('2000-06-01 00:00:00', $model->published_at);
-        $this->assertEquals('Alpha', $model->name);
-        $this->assertEquals('red', $model->color);
-        $this->assertEquals('red', $model->getTranslation('color', 'en'));
+        self::assertEquals('2000-06-01 00:00:00', $model->published_at);
+        self::assertEquals('Alpha', $model->name);
+        self::assertEquals('red', $model->color);
+        self::assertEquals('red', $model->getTranslation('color', 'en'));
     }
 
     public function testTranslatedListingSupportsQueryingOnlySomeColumns()
@@ -62,11 +62,11 @@ class OrderingTest extends TestCase
 
         $model = $result->first();
 
-        $this->assertEquals('2000-06-01 00:00:00', $model->published_at);
-        $this->assertEquals('Alpha', $model->name);
-        $this->assertEquals(null, $model->color);
-        $this->assertEquals('Alpha', $model->getTranslation('name', 'en'));
-        $this->assertEquals(null, $model->getTranslation('color', 'en'));
+        self::assertEquals('2000-06-01 00:00:00', $model->published_at);
+        self::assertEquals('Alpha', $model->name);
+        self::assertEquals(null, $model->color);
+        self::assertEquals('Alpha', $model->getTranslation('name', 'en'));
+        self::assertEquals(null, $model->getTranslation('color', 'en'));
     }
 
     public function testTranslatedListingCanWorkWithLocales()
@@ -76,13 +76,13 @@ class OrderingTest extends TestCase
             ->setLocale('sk')
             ->get();
 
-        $this->assertCount(10, $result);
+        self::assertCount(10, $result);
 
         $model = $result->first();
 
-        $this->assertEquals('2000-06-01 00:00:00', $model->published_at);
-        $this->assertEquals('Alfa', $model->name);
-        $this->assertEquals('cervena', $model->color);
-        $this->assertEquals('cervena', $model->getTranslation('color', 'sk'));
+        self::assertEquals('2000-06-01 00:00:00', $model->published_at);
+        self::assertEquals('Alfa', $model->name);
+        self::assertEquals('cervena', $model->color);
+        self::assertEquals('cervena', $model->getTranslation('color', 'sk'));
     }
 }

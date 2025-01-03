@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Collection;
 use Orchestra\Testbench\TestCase as Test;
 
 abstract class TestCase extends Test
@@ -98,7 +99,7 @@ abstract class TestCase extends Test
             'published_at' => '2000-06-01 00:00:00',
         ]);
 
-        collect(range(2, 10))->each(function ($i) {
+        (new Collection(range(2, 10)))->each(function ($i) {
             TestModel::create([
                 'name' => 'Zeta ' . $i,
                 'color' => 'yellow',
@@ -129,7 +130,7 @@ abstract class TestCase extends Test
             'published_at' => '2000-06-01 00:00:00',
         ]);
 
-        collect(range(2, 10))->each(function ($i) {
+        (new Collection(range(2, 10)))->each(function ($i) {
             TestTranslatableModel::create([
                 'name' => [
                     'en' => 'Zeta ' . $i,

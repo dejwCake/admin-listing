@@ -259,9 +259,9 @@ class AdminListing
             return ;
         }
 
-        $tokens = collect(explode(' ', $search));
+        $tokens = new Collection(explode(' ', $search));
 
-        $searchIn = collect($this->searchIn)->map(function ($column) {
+        $searchIn = (new Collection($this->searchIn))->map(function ($column) {
             return $this->parseFullColumnName($column);
         });
 
@@ -341,7 +341,7 @@ class AdminListing
      */
     public function get(array $columns = ['*'])
     {
-        $columns = collect($columns)->map(function ($column) {
+        $columns = (new Collection($columns))->map(function ($column) {
             return $this->parseFullColumnName($column);
         });
 

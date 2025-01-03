@@ -14,7 +14,7 @@ class ExceptionsTest extends TestCase
         try {
             AdminListing::create(TestNotAModel::class);
         } catch (NotAModelClassException $e) {
-            $this->assertTrue(true);
+            self::assertTrue(true);
             return ;
         }
 
@@ -26,7 +26,7 @@ class ExceptionsTest extends TestCase
         try {
             AdminListing::create(10);
         } catch (NotAModelClassException $e) {
-            $this->assertTrue(true);
+            self::assertTrue(true);
             return ;
         }
 
@@ -40,7 +40,7 @@ class ExceptionsTest extends TestCase
 
             // this time we are not checking a NotAModelClassException exception, because it is going to fail a bit earlier
         } catch (\Exception $e) {
-            $this->assertTrue(true);
+            self::assertTrue(true);
             return ;
         }
 

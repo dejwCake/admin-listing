@@ -13,7 +13,7 @@ class SearchTest extends TestCase
             ->attachSearch('Alpha', ['id', 'name', 'color'])
             ->get();
 
-        $this->assertCount(1, $result);
+        self::assertCount(1, $result);
     }
 
     public function testSearchingForARepeatedTerm()
@@ -23,7 +23,7 @@ class SearchTest extends TestCase
             ->attachSearch('Zeta', ['id', 'name', 'color'])
             ->get();
 
-        $this->assertCount(9, $result);
+        self::assertCount(9, $result);
     }
 
     public function testSearchingNotExistingQueryShouldReturnEmptyResponse()
@@ -33,7 +33,7 @@ class SearchTest extends TestCase
             ->attachSearch('not-existing-search-term', ['id', 'name', 'color'])
             ->get();
 
-        $this->assertCount(0, $result);
+        self::assertCount(0, $result);
     }
 
     public function testSearchingOnlyInColor()
@@ -43,7 +43,7 @@ class SearchTest extends TestCase
             ->attachSearch('Alpha', ['id', 'color'])
             ->get();
 
-        $this->assertCount(0, $result);
+        self::assertCount(0, $result);
     }
 
     public function testSearchingANumber()
@@ -53,7 +53,7 @@ class SearchTest extends TestCase
             ->attachSearch(1, ['id', 'name'])
             ->get();
 
-        $this->assertCount(2, $result);
+        self::assertCount(2, $result);
     }
 
     public function testTranslationsYouCanSearchAmongTextFieldsAndId()
@@ -63,7 +63,7 @@ class SearchTest extends TestCase
             ->attachSearch('Alpha', ['id', 'name', 'color'])
             ->get();
 
-        $this->assertCount(1, $result);
+        self::assertCount(1, $result);
     }
 
     public function testYouCannotSearchDependingOnADifferentLocale()
@@ -74,7 +74,7 @@ class SearchTest extends TestCase
             ->attachSearch('Alpha', ['id', 'name', 'color'])
             ->get();
 
-        $this->assertCount(0, $result);
+        self::assertCount(0, $result);
     }
 
     public function testSearchingANumberInTranslatedModel()
@@ -84,7 +84,7 @@ class SearchTest extends TestCase
             ->attachSearch(1, ['id', 'name'])
             ->get();
 
-        $this->assertCount(2, $result);
+        self::assertCount(2, $result);
     }
 
     public function testSearchingANumberInTranslatedModelForSk()
@@ -95,7 +95,7 @@ class SearchTest extends TestCase
             ->attachSearch(1, ['id', 'name'])
             ->get();
 
-        $this->assertCount(1, $result);
+        self::assertCount(1, $result);
     }
 
     public function testSearchingForAMultipleTermsZero()
@@ -105,7 +105,7 @@ class SearchTest extends TestCase
             ->attachSearch('Alpha Zeta', ['id', 'name', 'color'])
             ->get();
 
-        $this->assertCount(0, $result);
+        self::assertCount(0, $result);
     }
 
     public function testSearchingForAMultipleTermsOne()
@@ -115,7 +115,7 @@ class SearchTest extends TestCase
             ->attachSearch('Zeta 1', ['id', 'name', 'color'])
             ->get();
 
-        $this->assertCount(1, $result);
+        self::assertCount(1, $result);
     }
 
     public function testSearchingForAMultipleTermsMany()
@@ -125,6 +125,6 @@ class SearchTest extends TestCase
             ->attachSearch('Zeta yellow', ['id', 'name', 'color'])
             ->get();
 
-        $this->assertCount(9, $result);
+        self::assertCount(9, $result);
     }
 }

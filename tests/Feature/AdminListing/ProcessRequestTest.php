@@ -43,7 +43,7 @@ class ProcessRequestTest extends TestCase
         $result = $this->listing
             ->processRequestAndGet($request, ['id', 'name', 'number'], ['name', 'color']);
 
-        $this->assertCount(10, $result);
+        self::assertCount(10, $result);
     }
 
     public function testRequestProcessingWithOrdering()
@@ -79,8 +79,8 @@ class ProcessRequestTest extends TestCase
         $result = $this->listing
             ->processRequestAndGet($request, ['id', 'name', 'number'], ['name', 'color']);
 
-        $this->assertCount(10, $result);
-        $this->assertEquals('Zeta 2', $result->getCollection()->first()->name);
+        self::assertCount(10, $result);
+        self::assertEquals('Zeta 2', $result->getCollection()->first()->name);
     }
 
 
@@ -117,8 +117,8 @@ class ProcessRequestTest extends TestCase
         $result = $this->listing
             ->processRequestAndGet($request, ['*'], ['name', 'color']);
 
-        $this->assertCount(1, $result);
-        $this->assertEquals('Zeta 10', $result->getCollection()->first()->name);
+        self::assertCount(1, $result);
+        self::assertEquals('Zeta 10', $result->getCollection()->first()->name);
     }
 
     public function testRequestProcessingWithPaginationManipulated()
@@ -154,9 +154,9 @@ class ProcessRequestTest extends TestCase
         $result = $this->listing
             ->processRequestAndGet($request, ['*'], ['name', 'color']);
 
-        $this->assertEquals(2, $result->currentPage());
-        $this->assertEquals(3, $result->lastPage());
-        $this->assertEquals('Zeta 5', $result->getCollection()->first()->name);
+        self::assertEquals(2, $result->currentPage());
+        self::assertEquals(3, $result->lastPage());
+        self::assertEquals('Zeta 5', $result->getCollection()->first()->name);
     }
 
 
@@ -193,9 +193,9 @@ class ProcessRequestTest extends TestCase
         $result = $this->translatedListing
             ->processRequestAndGet($request, ['id', 'color'], ['id', 'name', 'color']);
 
-        $this->assertEquals(2, $result->total());
-        $this->assertEquals(null, $result->getCollection()->first()->name);
-        $this->assertEquals('red', $result->getCollection()->first()->color);
+        self::assertEquals(2, $result->total());
+        self::assertEquals(null, $result->getCollection()->first()->name);
+        self::assertEquals('red', $result->getCollection()->first()->color);
     }
 
     public function testRequestProcessingOnTranslatableModelWithSkLocale()
@@ -231,8 +231,8 @@ class ProcessRequestTest extends TestCase
         $result = $this->translatedListing
             ->processRequestAndGet($request, ['id', 'color'], ['id', 'name', 'color'], null, 'sk');
 
-        $this->assertEquals(1, $result->total());
-        $this->assertEquals(null, $result->getCollection()->first()->name);
-        $this->assertEquals('cervena', $result->getCollection()->first()->color);
+        self::assertEquals(1, $result->total());
+        self::assertEquals(null, $result->getCollection()->first()->name);
+        self::assertEquals('cervena', $result->getCollection()->first()->color);
     }
 }
