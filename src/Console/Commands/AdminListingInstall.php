@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Brackets\AdminListing\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
+use Illuminate\Filesystem\Filesystem;
 
 class AdminListingInstall extends Command
 {
@@ -25,6 +25,11 @@ class AdminListingInstall extends Command
      */
     protected $description = 'Install a brackets/admin-listing package';
 
+    public function __construct(private readonly Filesystem $filesystem)
+    {
+        parent::__construct();
+    }
+
     /**
      * Execute the console command.
      */
@@ -41,12 +46,12 @@ class AdminListingInstall extends Command
         string $replaceWith,
         ?string $ifRegexNotExists = null,
     ): bool|int {
-        $content = File::get($filePath);
+        $content = $this->filesystem->get($filePath);
         if ($ifRegexNotExists !== null && preg_match($ifRegexNotExists, $content)) {
             return false;
         }
 
-        return File::put($filePath, str_replace($find, $replaceWith, $content));
+        return $this->filesystem->put($filePath, str_replace($find, $replaceWith, $content));
     }
 
     private function alterEncryptCookiesMiddleware(): void
