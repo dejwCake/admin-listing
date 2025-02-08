@@ -6,7 +6,7 @@ parameters:
 			path: src/AdminListing.php
 
 		-
-			message: "#^Out of 44 possible param types, only 39 \\- 88\\.6 %% actually have it\\. Add more param types to get over 99 %%$#"
+			message: "#^Out of 45 possible param types, only 40 \\- 88\\.8 %% actually have it\\. Add more param types to get over 99 %%$#"
 			count: 2
 			path: src/AdminListing.php
 
@@ -21,7 +21,7 @@ parameters:
 			path: tests/Feature/AdminListing/ProcessRequestTest.php
 
 		-
-			message: "#^Out of 44 possible param types, only 39 \\- 88\\.6 %% actually have it\\. Add more param types to get over 99 %%$#"
+			message: "#^Out of 45 possible param types, only 40 \\- 88\\.8 %% actually have it\\. Add more param types to get over 99 %%$#"
 			count: 3
 			path: tests/TestCase.php
 
