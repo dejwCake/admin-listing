@@ -12,6 +12,7 @@ use Illuminate\Database\Schema\Builder;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\TestCase as Test;
+
 use function assert;
 
 abstract class TestCase extends Test
