@@ -12,9 +12,6 @@ use Illuminate\Support\ServiceProvider;
 
 class AdminListingServiceProvider extends ServiceProvider implements DeferrableProvider
 {
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         $this->commands([
@@ -28,9 +25,6 @@ class AdminListingServiceProvider extends ServiceProvider implements DeferrableP
         }
     }
 
-    /**
-     * Register the service provider.
-     */
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../install-stubs/config/admin-listing.php', 'admin-listing');
@@ -41,8 +35,6 @@ class AdminListingServiceProvider extends ServiceProvider implements DeferrableP
     }
 
     /**
-     * Get the services provided by the provider.
-     *
      * @return array<int, string>
      */
     public function provides(): array
