@@ -12,6 +12,7 @@ use Illuminate\Database\Schema\Builder;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\TestCase as Test;
+use function assert;
 
 abstract class TestCase extends Test
 {
@@ -78,7 +79,7 @@ abstract class TestCase extends Test
     protected function setUpDatabase(Application $app): void
     {
         $schema = $app['db']->connection()->getSchemaBuilder();
-        \assert($schema instanceof Builder);
+        assert($schema instanceof Builder);
         $schema->dropIfExists('test_models');
         $schema->create('test_models', static function (Blueprint $table): void {
             $table->increments('id');

@@ -1,31 +1,43 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$locale\\.$#"
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$locale\.$#'
+			identifier: property.notFound
 			count: 1
 			path: src/AdminListing.php
 
 		-
-			message: "#^Out of 45 possible param types, only 40 \\- 88\\.8 %% actually have it\\. Add more param types to get over 99 %%$#"
-			count: 2
-			path: src/AdminListing.php
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 3
+			path: tests/Feature/AdminListing/ExceptionsTest.php
 
 		-
-			message: "#^Out of 62 possible return types, only 61 \\- 98\\.3 %% actually have it\\. Add more return types to get over 99 %%$#"
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
 			count: 1
-			path: src/Facades/AdminListing.php
+			path: tests/Feature/AdminListing/OrderingTest.php
 
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
 			count: 6
 			path: tests/Feature/AdminListing/ProcessRequestTest.php
 
 		-
-			message: "#^Out of 45 possible param types, only 40 \\- 88\\.8 %% actually have it\\. Add more param types to get over 99 %%$#"
-			count: 3
+			message: '#^Call to function assert\(\) with true will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
 			path: tests/TestCase.php
 
 		-
-			message: "#^Out of 27 possible property types, only 24 \\- 88\\.8 %% actually have it\\. Add more property types to get over 99 %%$#"
-			count: 3
-			path: tests/TestNotAModel.php
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 8
+			path: tests/TestCase.php
+
+		-
+			message: '#^Instanceof between Illuminate\\Database\\Schema\\Builder and Illuminate\\Database\\Schema\\Builder will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: tests/TestCase.php
