@@ -35,11 +35,18 @@ class AdminListingInstall extends Command
         $this->info('Package brackets/admin-listing installed');
     }
 
-    private function strReplaceInFile(string $fileName, string $find, string $replaceWith): int|bool
-    {
-        $content = File::get($fileName);
+    private function strReplaceInFile(
+        string $filePath,
+        string $find,
+        string $replaceWith,
+        ?string $ifRegexNotExists = null
+    ): bool|int {
+        $content = File::get($filePath);
+        if ($ifRegexNotExists !== null && preg_match($ifRegexNotExists, $content)) {
+            return false;
+        }
 
-        return File::put($fileName, str_replace($find, $replaceWith, $content));
+        return File::put($filePath, str_replace($find, $replaceWith, $content));
     }
 
     private function alterEncryptCookiesMiddleware(): void
