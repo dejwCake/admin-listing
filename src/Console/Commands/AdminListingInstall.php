@@ -57,7 +57,7 @@ class AdminListingInstall extends Command
     private function alterEncryptCookiesMiddleware(): void
     {
         $this->strReplaceInFile(
-            app_path('Http/Middleware/EncryptCookies.php'),
+            base_path('bootstrap/app.php'),
             '->withMiddleware(function (Middleware $middleware) {',
             '->withMiddleware(function (Middleware $middleware) {
     $middleware->encryptCookies(except: [
