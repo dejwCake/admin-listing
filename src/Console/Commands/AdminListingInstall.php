@@ -56,11 +56,14 @@ class AdminListingInstall extends Command
 
     private function alterEncryptCookiesMiddleware(): void
     {
-        // change app/Http/Middleware/EncryptCookies to accept frontend-generated 'per_page' cookie from vue
         $this->strReplaceInFile(
             app_path('Http/Middleware/EncryptCookies.php'),
-            "//",
-            "'per_page'",
+            '->withMiddleware(function (Middleware $middleware) {',
+            '->withMiddleware(function (Middleware $middleware) {
+    $middleware->encryptCookies(except: [
+        \'per_page\',
+    ]);',
+            '|\'per_page\'|',
         );
     }
 }
