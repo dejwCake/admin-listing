@@ -60,9 +60,9 @@ class AdminListingInstall extends Command
             base_path('bootstrap/app.php'),
             '->withMiddleware(function (Middleware $middleware) {',
             '->withMiddleware(function (Middleware $middleware) {
-    $middleware->encryptCookies(except: [
-        \'per_page\',
-    ]);',
+        $middleware->encryptCookies(except: [
+            \'per_page\',
+        ]);',
             '|\'per_page\'|',
         );
     }
