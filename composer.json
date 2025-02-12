@@ -33,7 +33,7 @@
     ],
     "require": {
         "php": "^8.2",
-        "illuminate/support": "^11.41"
+        "illuminate/support": "^11.42"
     },
     "require-dev": {
         "dejwcake/craftable-translatable": "1.x-dev",
