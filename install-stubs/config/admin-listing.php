@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Brackets\Translatable\Models\WithTranslations;
+
 return [
 
     /*
@@ -10,5 +12,5 @@ return [
     |
     */
 
-    'with-translations-class' => 'Brackets\Translatable\Models\WithTranslations',
+    'with-translations-class' => WithTranslations::class,
 ];
