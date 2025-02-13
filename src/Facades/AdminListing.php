@@ -7,7 +7,8 @@ namespace Brackets\AdminListing\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Brackets\AdminListing\AdminListing
+ * @see \Brackets\AdminListing\Services\AdminListingService
+ * @deprecated We do not want to support Facades anymore. Please use dependency injection instead.
  */
 class AdminListing extends Facade
 {

@@ -1,10 +1,19 @@
 parameters:
 	ignoreErrors:
 		-
+			message: '''
+				#^Fetching class constant class of deprecated class Brackets\\AdminListing\\Facades\\AdminListing\:
+				We do not want to support Facades anymore\. Please use dependency injection instead\.$#
+			'''
+			identifier: classConstant.deprecatedClass
+			count: 1
+			path: src/AdminListingServiceProvider.php
+
+		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$locale\.$#'
 			identifier: property.notFound
 			count: 1
-			path: src/AdminListing.php
+			path: src/Services/AdminListingService.php
 
 		-
 			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'

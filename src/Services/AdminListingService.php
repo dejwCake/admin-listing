@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Brackets\AdminListing;
+namespace Brackets\AdminListing\Services;
 
 use Brackets\AdminListing\Exceptions\NotAModelClassException;
 use Exception;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Throwable;
 
-class AdminListing
+class AdminListingService
 {
     protected Model $model;
 
