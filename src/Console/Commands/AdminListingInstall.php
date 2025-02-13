@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Brackets\AdminListing\Console\Commands;
 
+use Brackets\AdminListing\AdminListingServiceProvider;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 
@@ -36,6 +37,10 @@ class AdminListingInstall extends Command
     public function handle(): void
     {
         $this->alterEncryptCookiesMiddleware();
+
+        $this->call('vendor:publish', [
+            '--provider' => AdminListingServiceProvider::class,
+        ]);
 
         $this->info('Package brackets/admin-listing installed');
     }
