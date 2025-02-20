@@ -8,7 +8,7 @@ use Brackets\AdminListing\AdminListingServiceProvider;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 
-class AdminListingInstall extends Command
+final class AdminListingInstall extends Command
 {
     /**
      * The name and signature of the console command.
