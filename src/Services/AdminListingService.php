@@ -6,12 +6,12 @@ namespace Brackets\AdminListing\Services;
 
 use Brackets\AdminListing\Exceptions\NotAModelClassException;
 use Exception;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -20,6 +20,8 @@ class AdminListingService
     protected Model $model;
 
     protected Builder $query;
+
+    protected DatabaseManager $databaseManager;
 
     protected int $currentPage;
 
@@ -41,6 +43,11 @@ class AdminListingService
 
     /** @var array<string> */
     protected array $searchIn = [];
+
+    private function __construct()
+    {
+        $this->databaseManager = app(DatabaseManager::class);
+    }
 
     public static function create(string $modelName): self
     {
@@ -360,7 +367,7 @@ class AdminListingService
         $likeOperator = 'like';
 
         // but PostgreSQL uses 'ilike' pattern matching operator for this same functionality
-        if (DB::connection()->getDriverName() === 'pgsql') {
+        if ($this->databaseManager->connection()->getDriverName() === 'pgsql') {
             $likeOperator = 'ilike';
         }
 
