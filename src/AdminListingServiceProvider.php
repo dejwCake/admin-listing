@@ -15,10 +15,6 @@ class AdminListingServiceProvider extends ServiceProvider implements DeferrableP
 {
     public function boot(): void
     {
-        $this->commands([
-            AdminListingInstall::class,
-        ]);
-
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../install-stubs/config/admin-listing.php' => config_path('admin-listing.php'),
@@ -29,10 +25,15 @@ class AdminListingServiceProvider extends ServiceProvider implements DeferrableP
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../install-stubs/config/admin-listing.php', 'admin-listing');
+
         $this->app->bind('admin-listing', AdminListingService::class);
 
         $loader = AliasLoader::getInstance();
         $loader->alias('AdminListing', AdminListing::class);
+
+        $this->commands([
+            AdminListingInstall::class,
+        ]);
     }
 
     /**
