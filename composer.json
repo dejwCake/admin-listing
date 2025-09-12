@@ -36,7 +36,7 @@
         "illuminate/support": "^10.0"
     },
     "require-dev": {
-        "dejwcake/craftable-translatable": "dev-main",
+        "dejwcake/craftable-translatable": "^0.9",
         "fakerphp/faker": "^1.19",
         "mockery/mockery": "^1.0",
         "orchestra/testbench": "~8.5",
