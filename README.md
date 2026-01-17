@@ -1,26 +1,34 @@
 # Admin Listing
 
-AdminListing is a helper that simplifies administration listing for your Eloquent models. It helps transforming a typical request to data. It can auto-handle all the basic stuff like pagination, ordering, search. It can handle also translatable eloquent models (see [Translatable Eloquent Models](https://docs.brackets.sk/#/translatable#make-your-model-translatable)).
+AdminListing is a helper for building admin listings on your Eloquent models, turning typical HTTP requests into ready-to-use query results. It automatically handles common tasks like pagination, ordering, and search, and also supports translatable Eloquent models (see [Translatable Eloquent Models](https://docs.brackets.sk/#/translatable#make-your-model-translatable)).
+
+This package is part of [Craftable](https://github.com/dejwCake/craftable) (`dejwCake/craftable`), an administration starter kit for Laravel 12. Forked from [Craftable](https://github.com/BRACKETS-by-TRIAD/craftable) (`brackets/craftable`).
 
 You can find full documentation at https://docs.getcraftable.com/#/admin-listing
 
-## Composer
+## Issues
+Where do I report issues?
+If something is not working as expected, please open an issue in the main repository https://github.com/dejwCake/craftable.
 
-To develop this package, you need to have composer installed. To run composer command use:
+## How to develop this project
+
+### Composer
+
+Update dependencies:
 ```shell
-  docker compose run -it --rm test composer update
+docker compose run -it --rm test composer update
 ```
 
-For composer normalization:
+Composer normalization:
 ```shell
-  docker compose run -it --rm php-qa composer normalize
+docker compose run -it --rm php-qa composer normalize
 ```
 
-## Run tests
+### Run tests
 
-To run tests use this docker environment.
+Run tests with pcov:
 ```shell
-  docker compose run -it --rm test vendor/bin/phpunit -d pcov.enabled=1
+docker compose run -it --rm test ./vendor/bin/phpunit -d pcov.enabled=1
 ```
 
 To switch between postgresql and mariadb change in `docker-compose.yml` DB_CONNECTION environmental variable:
@@ -29,35 +37,29 @@ To switch between postgresql and mariadb change in `docker-compose.yml` DB_CONNE
 + DB_CONNECTION: mysql
 ```
 
-## Run code analysis tools
+### Run code analysis tools (php-qa)
 
-To be sure, that your code is clean, you can run code analysis tools. To do this, run:
-
-For php compatibility:
+PHP compatibility:
 ```shell
-  docker compose run -it --rm php-qa phpcs --standard=.phpcs.compatibility.xml --cache=.phpcs.cache
+docker compose run -it --rm php-qa phpcs --standard=.phpcs.compatibility.xml --cache=.phpcs.cache
 ```
 
-For code style:
+Code style:
 ```shell
-  docker compose run -it --rm php-qa phpcs -s --colors --extensions=php
+docker compose run -it --rm php-qa phpcs -s --colors --extensions=php
 ```
 
-or to fix issues:
+Fix style issues:
 ```shell
-  docker compose run -it --rm php-qa phpcbf -s --colors --extensions=php
+docker compose run -it --rm php-qa phpcbf -s --colors --extensions=php
 ```
 
-For static analysis:
+Static analysis (phpstan):
 ```shell
-  docker compose run -it --rm php-qa phpstan analyse --configuration=phpstan.neon
+docker compose run -it --rm php-qa phpstan analyse --configuration=phpstan.neon
 ```
 
-For mess detector:
+Mess detector (phpmd):
 ```shell
-  docker compose run -it --rm php-qa phpmd ./src,./install-stubs,./tests ansi phpmd.xml --suffixes php --baseline-file phpmd.baseline.xml
+docker compose run -it --rm php-qa phpmd ./src,./install-stubs,./tests ansi phpmd.xml --suffixes php --baseline-file phpmd.baseline.xml
 ```
-
-## Issues
-Where do I report issues?
-If something is not working as expected, please open an issue in the main repository https://github.com/BRACKETS-by-TRIAD/craftable.

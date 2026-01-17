@@ -2,7 +2,7 @@ parameters:
 	ignoreErrors:
 		-
 			message: '''
-				#^Fetching class constant class of deprecated class Brackets\\AdminListing\\Facades\\AdminListing\:
+				#^Access to constant on deprecated class Brackets\\AdminListing\\Facades\\AdminListing\:
 				We do not want to support Facades anymore\. Please use dependency injection instead\.$#
 			'''
 			identifier: classConstant.deprecatedClass

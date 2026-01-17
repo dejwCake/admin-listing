@@ -46,8 +46,7 @@
     "autoload": {
         "psr-4": {
             "Brackets\\AdminListing\\": "src/"
-        },
-        "classmap": []
+        }
     },
     "autoload-dev": {
         "psr-4": {
