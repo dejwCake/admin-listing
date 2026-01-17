@@ -2,8 +2,9 @@
 
 AdminListing is a helper for building admin listings on your Eloquent models, turning typical HTTP requests into ready-to-use query results. It automatically handles common tasks like pagination, ordering, and search, and also supports translatable Eloquent models (see [Translatable Eloquent Models](https://docs.brackets.sk/#/translatable#make-your-model-translatable)).
 
-This package is part of [Craftable](https://github.com/dejwCake/craftable) (`dejwCake/craftable`), an administration starter kit for Laravel 12. Forked from [Craftable](https://github.com/BRACKETS-by-TRIAD/craftable) (`brackets/craftable`).
+This package is part of [Craftable](https://github.com/dejwCake/craftable) (`dejwCake/craftable`), an administration starter kit for Laravel 12, forked from [Craftable](https://github.com/BRACKETS-by-TRIAD/craftable) (`brackets/craftable`).
 
+## Documentation
 You can find full documentation at https://docs.getcraftable.com/#/admin-listing
 
 ## Issues
