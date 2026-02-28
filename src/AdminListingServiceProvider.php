@@ -16,15 +16,13 @@ class AdminListingServiceProvider extends ServiceProvider implements DeferrableP
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__ . '/../install-stubs/config/admin-listing.php' => config_path('admin-listing.php'),
-            ], 'config');
+            $this->publish();
         }
     }
 
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../install-stubs/config/admin-listing.php', 'admin-listing');
+        $this->mergeConfigFrom(__DIR__ . '/../config/admin-listing.php', 'admin-listing');
 
         $this->app->bind('admin-listing', AdminListingService::class);
 
@@ -42,5 +40,12 @@ class AdminListingServiceProvider extends ServiceProvider implements DeferrableP
     public function provides(): array
     {
         return ['admin-listing'];
+    }
+
+    private function publish(): void
+    {
+        $this->publishes([
+            __DIR__ . '/../config/admin-listing.php' => $this->app->configPath('admin-listing.php'),
+        ], 'config');
     }
 }
