@@ -36,7 +36,7 @@
         "illuminate/support": "^12.0"
     },
     "require-dev": {
-        "dejwcake/craftable-translatable": "^1.0.0",
+        "dejwcake/craftable-translatable": "^2.0",
         "fakerphp/faker": "^1.24.1",
         "larastan/larastan": "^3.1",
         "mockery/mockery": "^1.6",
@@ -58,9 +58,10 @@
             "providers": [
                 "Brackets\\AdminListing\\AdminListingServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-main": "1.0-dev",
+            "dev-v2-dev": "2.0-dev"
         }
-    },
-    "branch-alias": {
-        "dev-main": "1.0-dev"
     }
 }
