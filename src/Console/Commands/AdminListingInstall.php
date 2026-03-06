@@ -6,6 +6,7 @@ namespace Brackets\AdminListing\Console\Commands;
 
 use Brackets\AdminListing\AdminListingServiceProvider;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 
 final class AdminListingInstall extends Command
@@ -26,7 +27,7 @@ final class AdminListingInstall extends Command
      */
     protected $description = 'Install a brackets/admin-listing package';
 
-    public function __construct(private readonly Filesystem $filesystem)
+    public function __construct(private readonly Filesystem $filesystem, private readonly Application $app,)
     {
         parent::__construct();
     }
@@ -62,7 +63,7 @@ final class AdminListingInstall extends Command
     private function alterEncryptCookiesMiddleware(): void
     {
         $this->strReplaceInFile(
-            base_path('bootstrap/app.php'),
+            $this->app->basePath('bootstrap/app.php'),
             '->withMiddleware(function (Middleware $middleware) {',
             '->withMiddleware(function (Middleware $middleware) {
         $middleware->encryptCookies(except: [

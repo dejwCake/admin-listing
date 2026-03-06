@@ -6,6 +6,6 @@ namespace Brackets\AdminListing\Exceptions;
 
 use LogicException;
 
-final class NotAModelClassException extends LogicException
+final class ModelNotTranslatableException extends LogicException
 {
 }

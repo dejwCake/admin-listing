@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Brackets\AdminListing\Tests\Feature\AdminListing;
 
 use Brackets\AdminListing\Exceptions\NotAModelClassException;
-use Brackets\AdminListing\Services\AdminListingService;
+use Brackets\AdminListing\Services\AdminListingBuilder;
 use Brackets\AdminListing\Tests\TestCase;
 use Brackets\AdminListing\Tests\TestNotAModel;
 
@@ -13,8 +13,10 @@ class ExceptionsTest extends TestCase
 {
     public function testCreatingListingForAClassThatIsNotAModelShouldLeadToAnException(): void
     {
+        $builder = $this->app->make(AdminListingBuilder::class);
+
         try {
-            AdminListingService::create(TestNotAModel::class);
+            $builder->for(TestNotAModel::class)->build();
         } catch (NotAModelClassException) {
             self::assertTrue(true);
 
@@ -26,8 +28,10 @@ class ExceptionsTest extends TestCase
 
     public function testCreatingListingForAnIntegerClassShouldLeadToAnException(): void
     {
+        $builder = $this->app->make(AdminListingBuilder::class);
+
         try {
-            AdminListingService::create((string) 10);
+            $builder->for((string) 10)->build();
         } catch (NotAModelClassException) {
             self::assertTrue(true);
 
@@ -39,8 +43,10 @@ class ExceptionsTest extends TestCase
 
     public function testCreatingListingForANonClassStringShouldLeadToAnException(): void
     {
+        $builder = $this->app->make(AdminListingBuilder::class);
+
         try {
-            AdminListingService::create("Some string that is definitely not a class name");
+            $builder->for("Some string that is definitely not a class name")->build();
 
             // this time we are not checking a NotAModelClassException exception,
             // because it is going to fail a bit earlier

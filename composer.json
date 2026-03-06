@@ -43,6 +43,8 @@
         "orchestra/testbench": "^10.0",
         "phpunit/phpunit": "^11.5.9"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Brackets\\AdminListing\\": "src/"
@@ -54,14 +56,14 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-main": "1.0-dev",
+            "dev-v2-dev": "2.0-dev"
+        },
         "laravel": {
             "providers": [
                 "Brackets\\AdminListing\\AdminListingServiceProvider"
             ]
-        },
-        "branch-alias": {
-            "dev-main": "1.0-dev",
-            "dev-v2-dev": "2.0-dev"
         }
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Brackets\AdminListing\Services;
 
-use Brackets\AdminListing\Exceptions\NotAModelClassException;
-use Exception;
+use Brackets\AdminListing\Contracts\AdminListing;
+use Brackets\AdminListing\Exceptions\ModelNotTranslatableException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -13,95 +13,46 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Throwable;
 
-class AdminListingService
+final class AdminListingService implements AdminListing
 {
-    protected Model $model;
+    private Builder $query;
 
-    protected Builder $query;
+    private int $currentPage;
 
-    protected DatabaseManager $databaseManager;
+    private int $perPage;
 
-    protected int $currentPage;
+    private string $pageColumnName = 'page';
 
-    protected int $perPage;
+    private bool $hasPagination = false;
 
-    protected string $pageColumnName = 'page';
+    private string $locale;
 
-    protected bool $hasPagination = false;
+    private string $orderBy;
 
-    protected bool $modelHasTranslations = false;
+    private string $orderDirection = 'asc';
 
-    protected string $locale;
-
-    protected string $orderBy;
-
-    protected string $orderDirection = 'asc';
-
-    protected ?string $search;
+    private ?string $search;
 
     /** @var array<string> */
-    protected array $searchIn = [];
+    private array $searchIn = [];
 
-    private function __construct()
-    {
-        $this->databaseManager = app(DatabaseManager::class);
-    }
+    public function __construct(
+        private readonly DatabaseManager $databaseManager,
+        private readonly Model $model,
+        private readonly bool $modelHasTranslations = false,
+        string $defaultLocale = 'en',
+    ) {
+        if ($this->modelHasTranslations) {
+            $this->locale = $this->model->locale ?: $defaultLocale;
+        }
 
-    public static function create(string $modelName): self
-    {
-        return (new self())->setModel($modelName);
+        $this->query = $this->model->newQuery();
+        $this->orderBy = $this->model->getKeyName();
     }
 
     /**
-     * Set model admin listing works with
-     *
-     * Setting the model is required
-     *
-     * @throws NotAModelClassException
-     */
-    public function setModel(Model|string $model): self
-    {
-        if (is_string($model)) {
-            try {
-                $model = app($model);
-            } catch (Throwable) {
-                throw new NotAModelClassException("AdminListing works only with Eloquent Models");
-            }
-        }
-
-        if (!is_a($model, Model::class)) {
-            throw new NotAModelClassException("AdminListing works only with Eloquent Models");
-        }
-
-        $this->model = $model;
-
-        $this->init();
-
-        return $this;
-    }
-
-    /**
-     * Process request and get data
-     *
-     * You should always specify an array of columns that are about to be queried
-     *
-     * You can specify columns which should be searched
-     *
-     * If you need to include additional filters, you can manage it by
-     * modifying a query using $modifyQuery function, which receives
-     * a query as a parameter.
-     *
-     * If your model has translations, you can specify locale which should be loaded.
-     * When searching and ordering, this locale will be appended to the query in appropriate places as well.
-     *
-     * This method does not perform any authorization nor validation.
-     *
-     * array of columns which should be searched in (only text, character varying or primary key are allowed)
-     *
-     * @throws Exception
-     * The result is either LengthAwarePaginator (when pagination was attached) or simple Collection otherwise
+     * @return LengthAwarePaginator|Collection LengthAwarePaginator when pagination was attached, Collection otherwise
      */
     public function processRequestAndGet(
         Request $request,
@@ -110,7 +61,6 @@ class AdminListingService
         ?callable $modifyQuery = null,
         ?string $locale = null,
     ): LengthAwarePaginator|Collection {
-        // process all the basic stuff
         $this->attachOrdering(
             $request->input('orderBy', $this->model->getKeyName()),
             $request->input('orderDirection', 'asc'),
@@ -119,15 +69,14 @@ class AdminListingService
             $searchIn,
         );
 
-        // we want to attach pagination if bulk filter is disabled
-        // otherwise we want to select all data without pagination
+        // attach pagination only when bulk filter is disabled
         if (!$request->input('bulk')) {
             $this->attachPagination(
                 (int) $request->input('page', 1),
                 (int) $request->input('per_page', (int) $request->cookie('per_page', (string) 10)),
             );
         }
-        // add custom modifications
+
         if ($modifyQuery !== null) {
             $this->modifyQuery($modifyQuery);
         }
@@ -136,26 +85,23 @@ class AdminListingService
             $this->setLocale($locale);
         }
 
-        // if bulk filter is enabled we want to get only primary keys
+        // bulk filter enabled — return only primary keys
         if ($request->input('bulk')) {
             return $this->get(['id']);
         }
 
-        // execute query and get the results
         return $this->get($columns);
     }
 
     /**
-     * Set the locale you want to query
-     *
      * This method is only valid for Translatable models
      *
-     * @throws Exception
+     * @throws ModelNotTranslatableException
      */
     public function setLocale(string $locale): self
     {
-        if (!$this->modelHasTranslations()) {
-            throw new Exception('Model is not translatable, so you cannot set locale');
+        if (!$this->modelHasTranslations) {
+            throw new ModelNotTranslatableException('Model is not translatable, so you cannot set locale');
         }
         $this->locale = $locale;
 
@@ -163,8 +109,6 @@ class AdminListingService
     }
 
     /**
-     * Attach the ordering functionality
-     *
      * Any repeated call to this method is going to have no effect and original ordering is going to be used.
      * This is due to the limitation of the Illuminate\Database\Eloquent\Builder.
      */
@@ -176,14 +120,6 @@ class AdminListingService
         return $this;
     }
 
-    /**
-     * Attach the searching functionality
-     *
-     * @param string|null $search searched string
-     * array of columns which should be searched in (only text, character varying or primary key are allowed)
-     * @param array<string> $searchIn
-     * @return $this
-     */
     public function attachSearch(?string $search, array $searchIn): self
     {
         $this->search = $search;
@@ -192,9 +128,6 @@ class AdminListingService
         return $this;
     }
 
-    /**
-     * Attach the pagination functionality
-     */
     public function attachPagination(int $currentPage, int $perPage = 10, string $pageColumnName = 'page'): self
     {
         $this->hasPagination = true;
@@ -205,9 +138,6 @@ class AdminListingService
         return $this;
     }
 
-    /**
-     * Modify built query in any way
-     */
     public function modifyQuery(callable $modifyQuery): self
     {
         $modifyQuery($this->query);
@@ -216,10 +146,7 @@ class AdminListingService
     }
 
     /**
-     * Execute query and get data
-     *
-     * @param array<string> $columns
-     * The result is either LengthAwarePaginator (when pagination was attached) or simple Collection otherwise
+     * @return LengthAwarePaginator|Collection LengthAwarePaginator when pagination was attached, Collection otherwise
      */
     public function get(array $columns = ['*']): LengthAwarePaginator|Collection
     {
@@ -231,10 +158,12 @@ class AdminListingService
         return $this->buildPaginationAndGetResult($columns);
     }
 
-    protected function processResultCollection(Collection $collection): void
+    /**
+     * Set the default locale on each model in the result collection for translatable models.
+     */
+    private function processResultCollection(Collection $collection): void
     {
-        if ($this->modelHasTranslations()) {
-            // we need to set this default locale ad hoc
+        if ($this->modelHasTranslations) {
             $collection->each(function (Model $model): void {
                 if (method_exists($model, 'setLocale')) {
                     $model->setLocale($this->locale);
@@ -246,7 +175,7 @@ class AdminListingService
     /**
      * @return array<string, string|bool>
      */
-    protected function parseFullColumnName(string $column): array
+    private function parseFullColumnName(string $column): array
     {
         if (Str::contains($column, '.')) {
             [$table, $column] = explode('.', $column, 2);
@@ -269,40 +198,19 @@ class AdminListingService
     /**
      * @param array<string, string|bool> $column
      */
-    protected function materializeColumnName(array $column, bool $translated = false): string
+    private function materializeColumnName(array $column, bool $translated = false): string
     {
         return $column['table'] . '.'
             . $column['column']
             . ($translated ? ($column['translatable'] ? '->' . $this->locale : '') : '');
     }
 
-    protected function modelHasTranslations(): bool
-    {
-        return $this->modelHasTranslations;
-    }
-
     /**
      * @return array<string>
      */
-    protected function materializeColumnNames(Collection $columns, bool $translated = false): array
+    private function materializeColumnNames(Collection $columns, bool $translated = false): array
     {
         return $columns->map(fn ($column) => $this->materializeColumnName($column, $translated))->toArray();
-    }
-
-    /**
-     * Init properties
-     */
-    private function init(): void
-    {
-        $withTranslationsClassName = config('admin-listing.with-translations-class');
-        if ($this->model instanceof $withTranslationsClassName) {
-            $this->modelHasTranslations = true;
-            $this->locale = $this->model->locale ?: app()->getLocale();
-        }
-
-        $this->query = $this->model->newQuery();
-
-        $this->orderBy = $this->model->getKeyName();
     }
 
     /**
@@ -310,7 +218,7 @@ class AdminListingService
      */
     private function buildOrdering(): void
     {
-        $orderBy = $this->modelHasTranslations()
+        $orderBy = $this->modelHasTranslations
             ? $this->materializeColumnName(
                 $this->parseFullColumnName($this->orderBy),
                 true,
@@ -326,13 +234,12 @@ class AdminListingService
     private function buildSearch(): void
     {
         if (count($this->searchIn) === 0) {
-            return ;
+            return;
         }
 
-        // if empty string, then we don't search at all
         $search = trim((string) $this->search);
         if ($search === '') {
-            return ;
+            return;
         }
 
         $tokens = new Collection(explode(' ', $search));
@@ -362,11 +269,8 @@ class AdminListingService
 
     private function searchLike(Builder $query, array $column, string $token): void
     {
-
-        // MySQL and SQLite uses 'like' pattern matching operator that is case insensitive
+        // MySQL and SQLite use 'like' (case insensitive), PostgreSQL uses 'ilike'
         $likeOperator = 'like';
-
-        // but PostgreSQL uses 'ilike' pattern matching operator for this same functionality
         if ($this->databaseManager->connection()->getDriverName() === 'pgsql') {
             $likeOperator = 'ilike';
         }
