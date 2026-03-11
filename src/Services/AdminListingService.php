@@ -270,10 +270,10 @@ final class AdminListingService implements AdminListing
     private function searchLike(Builder $query, array $column, string $token): void
     {
         // MySQL and SQLite use 'like' (case insensitive), PostgreSQL uses 'ilike'
-        $likeOperator = 'like';
-        if ($this->databaseManager->connection()->getDriverName() === 'pgsql') {
-            $likeOperator = 'ilike';
-        }
+        $likeOperator = match ($this->databaseManager->connection()->getDriverName()) {
+            'pgsql' => 'ilike',
+            default => 'like',
+        };
 
         $query->orWhere($this->materializeColumnName($column, true), $likeOperator, '%' . $token . '%');
     }

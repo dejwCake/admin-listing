@@ -21,6 +21,7 @@ abstract class TestCase extends Test
 
     protected AdminListing $translatedListing;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();
@@ -53,7 +54,7 @@ abstract class TestCase extends Test
                 'schema' => 'public',
                 'sslmode' => 'prefer',
             ]);
-        } else if (env('DB_CONNECTION') === 'mysql') {
+        } elseif (env('DB_CONNECTION') === 'mysql') {
             $app['config']->set('database.default', 'mysql');
             $app['config']->set('database.connections.mysql', [
                 'driver' => 'mysql',
