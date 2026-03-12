@@ -200,9 +200,12 @@ final class AdminListingService implements AdminListing
      */
     private function materializeColumnName(array $column, bool $translated = false): string
     {
-        return $column['table'] . '.'
-            . $column['column']
-            . ($translated ? ($column['translatable'] ? '->' . $this->locale : '') : '');
+        $name = sprintf('%s.%s', $column['table'], $column['column']);
+        if ($translated && $column['translatable']) {
+            $name = sprintf('%s->%s', $name, $this->locale);
+        }
+
+        return $name;
     }
 
     /**
