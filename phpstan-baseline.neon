@@ -1,15 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '''
-				#^Access to constant on deprecated class Brackets\\AdminListing\\Facades\\AdminListing\:
-				We do not want to support Facades anymore\. Please use dependency injection instead\.$#
-			'''
-			identifier: classConstant.deprecatedClass
-			count: 1
-			path: src/AdminListingServiceProvider.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$locale\.$#'
 			identifier: property.notFound
 			count: 1
@@ -34,19 +25,8 @@ parameters:
 			path: tests/Feature/AdminListing/ProcessRequestTest.php
 
 		-
-			message: '#^Call to function assert\(\) with true will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: tests/TestCase.php
-
-		-
 			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
 			identifier: larastan.noEnvCallsOutsideOfConfig
 			count: 8
 			path: tests/TestCase.php
 
-		-
-			message: '#^Instanceof between Illuminate\\Database\\Schema\\Builder and Illuminate\\Database\\Schema\\Builder will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: tests/TestCase.php
