@@ -6,6 +6,7 @@ namespace Brackets\AdminListing\Tests\Feature\Builders;
 
 use Brackets\AdminListing\Builders\ListingBuilder;
 use Brackets\AdminListing\Contracts\Listing;
+use Brackets\AdminListing\Exceptions\ModelNotTranslatableException;
 use Brackets\AdminListing\Exceptions\NotAModelClassException;
 use Brackets\AdminListing\Tests\TestCase;
 use Brackets\AdminListing\Tests\TestModel;
@@ -103,14 +104,15 @@ class ListingBuilderTest extends TestCase
         self::assertCount(10, $result);
     }
 
-    public function testBuildWithNullTranslationsConfigReturnsNonTranslatableListing(): void
+    public function testBuildWithNullTranslationsConfigThrowsOnSetLocale(): void
     {
         $this->app['config']->set('admin-listing.with-translations-class', null);
         $builder = $this->app->make(ListingBuilder::class);
 
         $listing = $builder->for(TestTranslatableModel::class)->build();
 
-        //TODO need to throw exception if translatable functionality called
-        self::assertInstanceOf(Listing::class, $listing);
+        $this->expectException(ModelNotTranslatableException::class);
+
+        $listing->setLocale('en');
     }
 }

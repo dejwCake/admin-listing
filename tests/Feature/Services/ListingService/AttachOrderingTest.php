@@ -9,7 +9,6 @@ use Illuminate\Database\QueryException;
 
 class AttachOrderingTest extends TestCase
 {
-    //TODO have same use cases for listing and translatedListing
     public function testListingShouldProvideAbilityToSortByName(): void
     {
         $result = $this->listing
@@ -88,5 +87,30 @@ class AttachOrderingTest extends TestCase
         self::assertEquals('Alfa', $model->name);
         self::assertEquals('cervena', $model->color);
         self::assertEquals('cervena', $model->getTranslation('color', 'sk'));
+    }
+
+    public function testTranslatedListingShouldProvideAbilityToSortByNumber(): void
+    {
+        $result = $this->translatedListing
+            ->attachOrdering('number')
+            ->get();
+
+        self::assertCount(10, $result);
+        // number=2 is the smallest, number=999 is the largest
+        self::assertEquals(2, $result->first()->number);
+        self::assertEquals(999, $result->last()->number);
+    }
+
+    public function testTranslatedListingShouldProvideAbilityToChangeSortOrder(): void
+    {
+        $result = $this->translatedListing
+            ->attachOrdering('number', 'desc')
+            ->get();
+
+        self::assertCount(10, $result);
+        self::assertEquals(999, $result->first()->number);
+        self::assertEquals('Alpha', $result->first()->name);
+        self::assertEquals(2, $result->last()->number);
+        self::assertEquals('Zeta 2', $result->last()->name);
     }
 }

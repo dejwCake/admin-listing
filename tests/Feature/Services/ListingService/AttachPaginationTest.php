@@ -8,7 +8,6 @@ use Brackets\AdminListing\Tests\TestCase;
 
 class AttachPaginationTest extends TestCase
 {
-    //TODO: Fix tests as we removed attachOrdering
     public function testListingProvidesPagination(): void
     {
         $result = $this->listing

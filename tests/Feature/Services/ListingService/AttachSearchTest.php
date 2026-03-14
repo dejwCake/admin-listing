@@ -8,7 +8,6 @@ use Brackets\AdminListing\Tests\TestCase;
 
 class AttachSearchTest extends TestCase
 {
-    //TODO have same use cases for listing and translatedListing
     public function testYouCanSearchAmongTextFieldsAndId(): void
     {
         $result = $this->listing
@@ -117,5 +116,32 @@ class AttachSearchTest extends TestCase
             ->get();
 
         self::assertCount(9, $result);
+    }
+
+    public function testTranslatedSearchingForARepeatedTerm(): void
+    {
+        $result = $this->translatedListing
+            ->attachSearch('Zeta', ['id', 'name', 'color'])
+            ->get();
+
+        self::assertCount(9, $result);
+    }
+
+    public function testTranslatedSearchingNotExistingQueryShouldReturnEmptyResponse(): void
+    {
+        $result = $this->translatedListing
+            ->attachSearch('not-existing-search-term', ['id', 'name', 'color'])
+            ->get();
+
+        self::assertCount(0, $result);
+    }
+
+    public function testTranslatedSearchingOnlyInColor(): void
+    {
+        $result = $this->translatedListing
+            ->attachSearch('Alpha', ['id', 'color'])
+            ->get();
+
+        self::assertCount(0, $result);
     }
 }

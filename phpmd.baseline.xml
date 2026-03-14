@@ -2,4 +2,5 @@
 <phpmd-baseline>
   <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="tests/Feature/Builders/ListingBuilderTest.php"/>
   <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="tests/Feature/Services/ListingService/AttachSearchTest.php"/>
+  <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="tests/Feature/Services/ListingService/ProcessRequestAndGetTest.php"/>
 </phpmd-baseline>

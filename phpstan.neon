@@ -23,5 +23,3 @@ parameters:
     ignoreErrors:
 
     excludePaths:
-        - ./tests/fixtures/*
-        - ./tests/temp/*

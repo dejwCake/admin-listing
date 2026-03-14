@@ -108,7 +108,6 @@ class ProcessRequestAndGetTest extends TestCase
         self::assertArrayNotHasKey('name', $result->first()->toArray());
     }
 
-    //TODO add more tests for translatedListing, cover all scenarios than with listing
     public function testProcessRequestOnTranslatableModelWithDefaultLocale(): void
     {
         $listingQuery = new ListingQuery(
@@ -139,5 +138,68 @@ class ProcessRequestAndGetTest extends TestCase
         self::assertEquals(1, $result->total());
         self::assertNull($result->getCollection()->first()->name);
         self::assertEquals('cervena', $result->getCollection()->first()->color);
+    }
+
+    public function testProcessRequestOnTranslatableModelWithDefaultParams(): void
+    {
+        $listingQuery = new ListingQuery(
+            columns: ['id', 'name', 'color', 'number'],
+            searchIn: ['name', 'color'],
+        );
+
+        $result = $this->translatedListing->processRequestAndGet($listingQuery);
+
+        self::assertInstanceOf(LengthAwarePaginator::class, $result);
+        self::assertCount(10, $result);
+    }
+
+    public function testProcessRequestOnTranslatableModelWithPagination(): void
+    {
+        $listingQuery = new ListingQuery(
+            columns: ['id', 'name', 'color'],
+            searchIn: ['name', 'color'],
+            page: 2,
+            perPage: 4,
+        );
+
+        $result = $this->translatedListing->processRequestAndGet($listingQuery);
+
+        self::assertInstanceOf(LengthAwarePaginator::class, $result);
+        self::assertEquals(2, $result->currentPage());
+        self::assertEquals(3, $result->lastPage());
+        self::assertCount(4, $result->getCollection());
+    }
+
+    public function testProcessRequestOnTranslatableModelWithModifyQuery(): void
+    {
+        $listingQuery = new ListingQuery(
+            columns: ['*'],
+            searchIn: ['name', 'color'],
+        );
+
+        $result = $this->translatedListing->processRequestAndGet(
+            $listingQuery,
+            static function (\Illuminate\Database\Eloquent\Builder $query): void {
+                $query->where('number', 999);
+            },
+        );
+
+        self::assertInstanceOf(LengthAwarePaginator::class, $result);
+        self::assertCount(1, $result);
+    }
+
+    public function testProcessRequestOnTranslatableModelWithBulkReturnsOnlyIds(): void
+    {
+        $listingQuery = new ListingQuery(
+            columns: ['*'],
+            searchIn: ['name', 'color'],
+            bulk: true,
+        );
+
+        $result = $this->translatedListing->processRequestAndGet($listingQuery);
+
+        self::assertInstanceOf(Collection::class, $result);
+        self::assertCount(10, $result);
+        self::assertArrayHasKey('id', $result->first()->toArray());
     }
 }
