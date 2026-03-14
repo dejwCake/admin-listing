@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Brackets\AdminListing\Tests\Feature\AdminListing;
+namespace Brackets\AdminListing\Tests\Feature\Services\ListingService;
 
 use Brackets\AdminListing\Tests\TestCase;
 
-class BasicStuffTest extends TestCase
+class GetTest extends TestCase
 {
+    //TODO have same use cases for listing and translatedListing
     public function testListingShouldReturnWholeCollectionWhenNothingWasSet(): void
     {
         $result = $this->listing

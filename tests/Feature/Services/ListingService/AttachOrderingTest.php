@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Brackets\AdminListing\Tests\Feature\AdminListing;
+namespace Brackets\AdminListing\Tests\Feature\Services\ListingService;
 
 use Brackets\AdminListing\Tests\TestCase;
 use Illuminate\Database\QueryException;
 
-class OrderingTest extends TestCase
+class AttachOrderingTest extends TestCase
 {
+    //TODO have same use cases for listing and translatedListing
     public function testListingShouldProvideAbilityToSortByName(): void
     {
         $result = $this->listing
@@ -18,7 +19,7 @@ class OrderingTest extends TestCase
         self::assertEquals('Alpha', $result->first()->name);
     }
 
-    public function listingShouldProvideAbilityToChangeSortOrder(): void
+    public function testListingShouldProvideAbilityToChangeSortOrder(): void
     {
         $result = $this->listing
             ->attachOrdering('name', 'desc')
@@ -75,7 +76,7 @@ class OrderingTest extends TestCase
     public function testTranslatedListingCanWorkWithLocales(): void
     {
         $result = $this->translatedListing
-            ->attachOrdering('name')
+            ->attachOrdering('number', 'desc')
             ->setLocale('sk')
             ->get();
 

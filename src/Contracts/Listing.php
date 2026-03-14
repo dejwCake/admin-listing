@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace Brackets\AdminListing\Contracts;
 
+use Brackets\AdminListing\Dtos\ListingQuery;
 use Brackets\AdminListing\Exceptions\ModelNotTranslatableException;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
-interface AdminListing
+interface Listing
 {
     /**
-     * Process request and get data
-     *
-     * You should always specify an array of columns that are about to be queried.
-     *
-     * You can specify columns which should be searched.
+     * Process listing query and get data
      *
      * If you need to include additional filters, you can manage it by
      * modifying a query using $modifyQuery function, which receives
@@ -27,15 +23,10 @@ interface AdminListing
      *
      * This method does not perform any authorization nor validation.
      *
-     * @param array<string> $columns
-     * @param array<string>|null $searchIn array of columns which should be searched in (only text, character
-     * varying, or primary key are allowed)
      * @throws ModelNotTranslatableException
      */
     public function processRequestAndGet(
-        Request $request,
-        array $columns = ['*'],
-        ?array $searchIn = null,
+        ListingQuery $listingQuery,
         ?callable $modifyQuery = null,
         ?string $locale = null,
     ): LengthAwarePaginator|Collection;

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Brackets\AdminListing\Tests\Feature\AdminListing;
+namespace Brackets\AdminListing\Tests\Feature\Services\ListingService;
 
 use Brackets\AdminListing\Tests\TestCase;
 
-class SearchTest extends TestCase
+class AttachSearchTest extends TestCase
 {
+    //TODO have same use cases for listing and translatedListing
     public function testYouCanSearchAmongTextFieldsAndId(): void
     {
         $result = $this->listing
-            ->attachOrdering('name')
             ->attachSearch('Alpha', ['id', 'name', 'color'])
             ->get();
 
@@ -21,7 +21,6 @@ class SearchTest extends TestCase
     public function testSearchingForARepeatedTerm(): void
     {
         $result = $this->listing
-            ->attachOrdering('name')
             ->attachSearch('Zeta', ['id', 'name', 'color'])
             ->get();
 
@@ -31,7 +30,6 @@ class SearchTest extends TestCase
     public function testSearchingNotExistingQueryShouldReturnEmptyResponse(): void
     {
         $result = $this->listing
-            ->attachOrdering('name')
             ->attachSearch('not-existing-search-term', ['id', 'name', 'color'])
             ->get();
 
@@ -41,7 +39,6 @@ class SearchTest extends TestCase
     public function testSearchingOnlyInColor(): void
     {
         $result = $this->listing
-            ->attachOrdering('name')
             ->attachSearch('Alpha', ['id', 'color'])
             ->get();
 
@@ -51,7 +48,6 @@ class SearchTest extends TestCase
     public function testSearchingANumber(): void
     {
         $result = $this->listing
-            ->attachOrdering('name')
             ->attachSearch((string) 1, ['id', 'name'])
             ->get();
 
@@ -61,7 +57,6 @@ class SearchTest extends TestCase
     public function testTranslationsYouCanSearchAmongTextFieldsAndId(): void
     {
         $result = $this->translatedListing
-            ->attachOrdering('name')
             ->attachSearch('Alpha', ['id', 'name', 'color'])
             ->get();
 
@@ -71,7 +66,6 @@ class SearchTest extends TestCase
     public function testYouCannotSearchDependingOnADifferentLocale(): void
     {
         $result = $this->translatedListing
-            ->attachOrdering('name')
             ->setLocale('sk')
             ->attachSearch('Alpha', ['id', 'name', 'color'])
             ->get();
@@ -82,7 +76,6 @@ class SearchTest extends TestCase
     public function testSearchingANumberInTranslatedModel(): void
     {
         $result = $this->translatedListing
-            ->attachOrdering('name')
             ->attachSearch((string) 1, ['id', 'name'])
             ->get();
 
@@ -92,7 +85,6 @@ class SearchTest extends TestCase
     public function testSearchingANumberInTranslatedModelForSk(): void
     {
         $result = $this->translatedListing
-            ->attachOrdering('name')
             ->setLocale('sk')
             ->attachSearch((string) 1, ['id', 'name'])
             ->get();
@@ -103,7 +95,6 @@ class SearchTest extends TestCase
     public function testSearchingForAMultipleTermsZero(): void
     {
         $result = $this->translatedListing
-            ->attachOrdering('name')
             ->attachSearch('Alpha Zeta', ['id', 'name', 'color'])
             ->get();
 
@@ -113,7 +104,6 @@ class SearchTest extends TestCase
     public function testSearchingForAMultipleTermsOne(): void
     {
         $result = $this->translatedListing
-            ->attachOrdering('name')
             ->attachSearch('Zeta 1', ['id', 'name', 'color'])
             ->get();
 
@@ -123,7 +113,6 @@ class SearchTest extends TestCase
     public function testSearchingForAMultipleTermsMany(): void
     {
         $result = $this->translatedListing
-            ->attachOrdering('name')
             ->attachSearch('Zeta yellow', ['id', 'name', 'color'])
             ->get();
 

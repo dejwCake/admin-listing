@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Brackets\AdminListing\Tests;
 
-use Brackets\AdminListing\Contracts\AdminListing;
-use Brackets\AdminListing\Services\AdminListingBuilder;
+use Brackets\AdminListing\Builders\ListingBuilder;
+use Brackets\AdminListing\Contracts\Listing;
 use Brackets\Translatable\Models\WithTranslations;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
@@ -17,9 +17,9 @@ use function assert;
 
 abstract class TestCase extends Test
 {
-    protected AdminListing $listing;
+    protected Listing $listing;
 
-    protected AdminListing $translatedListing;
+    protected Listing $translatedListing;
 
     #[\Override]
     public function setUp(): void
@@ -28,7 +28,7 @@ abstract class TestCase extends Test
 
         $this->setUpDatabase($this->app);
 
-        $builder = $this->app->make(AdminListingBuilder::class);
+        $builder = $this->app->make(ListingBuilder::class);
         $this->listing = $builder->for(TestModel::class)->build();
         $this->translatedListing = $builder->for(TestTranslatableModel::class)->build();
     }

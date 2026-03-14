@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Brackets\AdminListing;
 
+use Brackets\AdminListing\Builders\ListingBuilder;
 use Brackets\AdminListing\Console\Commands\AdminListingInstall;
-use Brackets\AdminListing\Services\AdminListingBuilder;
 use Illuminate\Support\ServiceProvider;
 use Override;
 
@@ -23,7 +23,7 @@ class AdminListingServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/admin-listing.php', 'admin-listing');
 
-        $this->app->singleton(AdminListingBuilder::class);
+        $this->app->singleton(ListingBuilder::class);
 
         $this->commands([
             AdminListingInstall::class,

@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Brackets\AdminListing\Services;
+namespace Brackets\AdminListing\Builders;
 
-use Brackets\AdminListing\Contracts\AdminListing;
+use Brackets\AdminListing\Contracts\Listing;
 use Brackets\AdminListing\Exceptions\NotAModelClassException;
+use Brackets\AdminListing\Services\ListingService;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Model;
 use Throwable;
 
-final class AdminListingBuilder
+final class ListingBuilder
 {
     private Model|string|null $model = null;
 
@@ -35,14 +36,14 @@ final class AdminListingBuilder
     }
 
     /**
-     * Build the AdminListingService instance
+     * Build the ListingService instance
      *
      * @throws NotAModelClassException
      */
-    public function build(): AdminListing
+    public function build(): Listing
     {
         if ($this->model === null) {
-            throw new NotAModelClassException('Model must be set before building AdminListing');
+            throw new NotAModelClassException('Model must be set before building Listing');
         }
 
         $model = $this->model;
@@ -51,12 +52,12 @@ final class AdminListingBuilder
             try {
                 $model = $this->app->make($model);
             } catch (Throwable) {
-                throw new NotAModelClassException('AdminListing works only with Eloquent Models');
+                throw new NotAModelClassException('Listing works only with Eloquent Models');
             }
         }
 
         if (!$model instanceof Model) {
-            throw new NotAModelClassException('AdminListing works only with Eloquent Models');
+            throw new NotAModelClassException('Listing works only with Eloquent Models');
         }
 
         /** @var class-string|null $withTranslationsClass */
@@ -65,7 +66,7 @@ final class AdminListingBuilder
         $modelHasTranslations = $withTranslationsClass !== null
             && $model instanceof $withTranslationsClass;
 
-        return new AdminListingService(
+        return new ListingService(
             $this->databaseManager,
             $model,
             $modelHasTranslations,

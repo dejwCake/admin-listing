@@ -4,25 +4,25 @@ parameters:
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$locale\.$#'
 			identifier: property.notFound
 			count: 1
-			path: src/Services/AdminListingService.php
+			path: src/Services/ListingService.php
 
 		-
-			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Brackets\\\\AdminListing\\\\Contracts\\\\Listing'' and Brackets\\AdminListing\\Contracts\\Listing will always evaluate to true\.$#'
 			identifier: staticMethod.alreadyNarrowedType
 			count: 3
-			path: tests/Feature/AdminListing/ExceptionsTest.php
+			path: tests/Feature/Builders/ListingBuilderTest.php
+
+		-
+			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''Brackets\\\\AdminListing\\\\Dtos\\\\ListingQuery'' and Brackets\\AdminListing\\Dtos\\ListingQuery will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 1
+			path: tests/Feature/Builders/ListingQueryBuilderTest.php
 
 		-
 			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
 			identifier: staticMethod.alreadyNarrowedType
 			count: 1
-			path: tests/Feature/AdminListing/OrderingTest.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
-			count: 6
-			path: tests/Feature/AdminListing/ProcessRequestTest.php
+			path: tests/Feature/Services/ListingService/AttachOrderingTest.php
 
 		-
 			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'

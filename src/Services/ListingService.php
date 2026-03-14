@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Brackets\AdminListing\Services;
 
-use Brackets\AdminListing\Contracts\AdminListing;
+use Brackets\AdminListing\Contracts\Listing;
+use Brackets\AdminListing\Dtos\ListingQuery;
 use Brackets\AdminListing\Exceptions\ModelNotTranslatableException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-final class AdminListingService implements AdminListing
+final class ListingService implements Listing
 {
     private Builder $query;
 
@@ -55,26 +55,18 @@ final class AdminListingService implements AdminListing
      * @return LengthAwarePaginator|Collection LengthAwarePaginator when pagination was attached, Collection otherwise
      */
     public function processRequestAndGet(
-        Request $request,
-        array $columns = ['*'],
-        ?array $searchIn = null,
+        ListingQuery $listingQuery,
         ?callable $modifyQuery = null,
         ?string $locale = null,
     ): LengthAwarePaginator|Collection {
-        $this->attachOrdering(
-            $request->input('orderBy', $this->model->getKeyName()),
-            $request->input('orderDirection', 'asc'),
-        )->attachSearch(
-            $request->input('search'),
-            $searchIn,
+        $this->attachOrdering($listingQuery->orderBy, $listingQuery->orderDirection)->attachSearch(
+            $listingQuery->search,
+            $listingQuery->searchIn,
         );
 
         // attach pagination only when bulk filter is disabled
-        if (!$request->input('bulk')) {
-            $this->attachPagination(
-                (int) $request->input('page', 1),
-                (int) $request->input('per_page', (int) $request->cookie('per_page', (string) 10)),
-            );
+        if (!$listingQuery->bulk) {
+            $this->attachPagination($listingQuery->page, $listingQuery->perPage);
         }
 
         if ($modifyQuery !== null) {
@@ -86,11 +78,11 @@ final class AdminListingService implements AdminListing
         }
 
         // bulk filter enabled — return only primary keys
-        if ($request->input('bulk')) {
+        if ($listingQuery->bulk) {
             return $this->get(['id']);
         }
 
-        return $this->get($columns);
+        return $this->get($listingQuery->columns);
     }
 
     /**
