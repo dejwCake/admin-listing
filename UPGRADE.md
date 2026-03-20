@@ -3,7 +3,7 @@
 ## Requirements
 
 - PHP `^8.5` (was `^8.2`)
-- Laravel 12 (illuminate/support `^12.0`)
+- Laravel 13 (illuminate/support `^13.0`)
 - PHPUnit `^13.0` (was `^11.x`, dev only)
 - `dejwcake/craftable-translatable` `^2.0` (was `^1.0`, dev only)
 
