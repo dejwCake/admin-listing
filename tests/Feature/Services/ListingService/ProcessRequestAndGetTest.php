@@ -179,7 +179,7 @@ class ProcessRequestAndGetTest extends TestCase
 
         $result = $this->translatedListing->processRequestAndGet(
             $listingQuery,
-            static function (\Illuminate\Database\Eloquent\Builder $query): void {
+            static function (Builder $query): void {
                 $query->where('number', 999);
             },
         );

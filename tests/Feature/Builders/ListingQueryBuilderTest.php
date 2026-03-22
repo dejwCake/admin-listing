@@ -8,12 +8,13 @@ use Brackets\AdminListing\Builders\ListingQueryBuilder;
 use Brackets\AdminListing\Dtos\ListingQuery;
 use Brackets\AdminListing\Tests\TestCase;
 use Illuminate\Http\Request;
+use Override;
 
 class ListingQueryBuilderTest extends TestCase
 {
     private ListingQueryBuilder $listingQueryBuilder;
 
-    #[\Override]
+    #[Override]
     public function setUp(): void
     {
         parent::setUp();

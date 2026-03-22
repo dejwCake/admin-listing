@@ -12,13 +12,14 @@ use Brackets\AdminListing\Tests\TestCase;
 use Brackets\AdminListing\Tests\TestModel;
 use Brackets\AdminListing\Tests\TestNotAModel;
 use Brackets\AdminListing\Tests\TestTranslatableModel;
+use Override;
 use Throwable;
 
 class ListingBuilderTest extends TestCase
 {
     private ListingBuilder $listingBuilder;
 
-    #[\Override]
+    #[Override]
     public function setUp(): void
     {
         parent::setUp();
