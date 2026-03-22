@@ -12,7 +12,6 @@ use Illuminate\Database\Schema\Builder;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\TestCase as Test;
-
 use Override;
 
 use function assert;
