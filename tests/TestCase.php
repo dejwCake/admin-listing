@@ -11,6 +11,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Builder;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Env;
 use Orchestra\Testbench\TestCase as Test;
 use Override;
 use Throwable;
@@ -42,29 +43,29 @@ abstract class TestCase extends Test
     protected function getEnvironmentSetUp($app): void
     {
         $app['config']->set('admin-listing.with-translations-class', WithTranslations::class);
-        if (env('DB_CONNECTION') === 'pgsql') {
+        if (Env::get('DB_CONNECTION') === 'pgsql') {
             $app['config']->set('database.default', 'pgsql');
             $app['config']->set('database.connections.pgsql', [
                 'driver' => 'pgsql',
                 'host' => 'pgsql',
                 'port' => '5432',
-                'database' => env('DB_DATABASE', 'laravel'),
-                'username' => env('DB_USERNAME', 'root'),
-                'password' => env('DB_PASSWORD', 'bestsecret'),
+                'database' => Env::get('DB_DATABASE', 'laravel'),
+                'username' => Env::get('DB_USERNAME', 'root'),
+                'password' => Env::get('DB_PASSWORD', 'bestsecret'),
                 'charset' => 'utf8',
                 'prefix' => '',
                 'schema' => 'public',
                 'sslmode' => 'prefer',
             ]);
-        } elseif (env('DB_CONNECTION') === 'mysql') {
+        } elseif (Env::get('DB_CONNECTION') === 'mysql') {
             $app['config']->set('database.default', 'mysql');
             $app['config']->set('database.connections.mysql', [
                 'driver' => 'mysql',
                 'host' => 'mysql',
                 'port' => '3306',
-                'database' => env('DB_DATABASE', 'laravel'),
-                'username' => env('DB_USERNAME', 'root'),
-                'password' => env('DB_PASSWORD', 'bestsecret'),
+                'database' => Env::get('DB_DATABASE', 'laravel'),
+                'username' => Env::get('DB_USERNAME', 'root'),
+                'password' => Env::get('DB_PASSWORD', 'bestsecret'),
                 'charset' => 'utf8',
                 'prefix' => '',
                 'schema' => 'public',
