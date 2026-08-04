@@ -13,6 +13,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\TestCase as Test;
 use Override;
+use Throwable;
 
 use function assert;
 
@@ -79,10 +80,31 @@ abstract class TestCase extends Test
         }
     }
 
+    protected function supportsAccentInsensitiveSearch(): bool
+    {
+        $connection = $this->app['db']->connection();
+
+        return match ($connection->getDriverName()) {
+            'pgsql' => $connection->selectOne("SELECT 1 FROM pg_extension WHERE extname = 'unaccent'") !== null,
+            'sqlite' => false,
+            default => true,
+        };
+    }
+
     protected function setUpDatabase(Application $app): void
     {
         $schema = $app['db']->connection()->getSchemaBuilder();
         assert($schema instanceof Builder);
+
+        if ($app['db']->connection()->getDriverName() === 'pgsql') {
+            // Best effort: the fallback path is exercised when this is not permitted
+            try {
+                $app['db']->connection()->statement('CREATE EXTENSION IF NOT EXISTS unaccent');
+            } catch (Throwable) {
+                // no-op
+            }
+        }
+
         $schema->dropIfExists('test_models');
         $schema->create('test_models', static function (Blueprint $table): void {
             $table->increments('id');

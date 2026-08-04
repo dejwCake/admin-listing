@@ -53,7 +53,7 @@ class ListingBuilderTest extends TestCase
     public function testBuildWithoutModelThrowsException(): void
     {
         $this->expectException(NotAModelClassException::class);
-        $this->expectExceptionMessage('Model must be set before building Listing');
+        $this->expectExceptionMessageIs('Model must be set before building Listing');
 
         $this->listingBuilder->build();
     }
@@ -91,7 +91,7 @@ class ListingBuilderTest extends TestCase
         $this->listingBuilder->for(TestModel::class);
 
         $this->expectException(NotAModelClassException::class);
-        $this->expectExceptionMessage('Model must be set before building Listing');
+        $this->expectExceptionMessageIs('Model must be set before building Listing');
 
         $this->listingBuilder->build();
     }

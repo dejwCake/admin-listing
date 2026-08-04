@@ -37,6 +37,8 @@ final class ListingService implements Listing
     /** @var array<string> */
     private array $searchIn = [];
 
+    private ?bool $unaccentAvailable = null;
+
     public function __construct(
         private readonly DatabaseManager $databaseManager,
         private readonly Model $model,
@@ -264,13 +266,37 @@ final class ListingService implements Listing
 
     private function searchLike(Builder $query, array $column, string $token): void
     {
-        // MySQL and SQLite use 'like' (case insensitive), PostgreSQL uses 'ilike'
-        $likeOperator = match ($this->databaseManager->connection()->getDriverName()) {
-            'pgsql' => 'ilike',
-            default => 'like',
+        $connection = $this->databaseManager->connection();
+        $wrapped = $connection->getQueryGrammar()->wrap($this->materializeColumnName($column, true));
+
+        // `utf8mb4_unicode_ci` is both case- and accent-insensitive, so MySQL needs nothing
+        // further. The CONVERT is not decorative: a collation is only valid for its own
+        // character set, so applying it directly to, say, a utf8mb3 column raises
+        // "COLLATION 'utf8mb4_unicode_ci' is not valid for CHARACTER SET 'utf8mb3'".
+        // PostgreSQL's `ilike` only handles case, so accents need `unaccent()` on both
+        // sides -- when the extension is installed.
+        $sql = match ($connection->getDriverName()) {
+            'mysql', 'mariadb' => sprintf('CONVERT(%s USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE ?', $wrapped),
+            // The CAST is required, not defensive: `unaccent()` only accepts text, so
+            // without it searching a numeric or date column raises "No function matches
+            // the given name and argument types". Bare `ILIKE` coerces those silently.
+            'pgsql' => $this->hasUnaccent()
+                ? sprintf('unaccent(CAST(%s AS TEXT)) ILIKE unaccent(?)', $wrapped)
+                : sprintf('%s ILIKE ?', $wrapped),
+            default => sprintf('%s LIKE ?', $wrapped),
         };
 
-        $query->orWhere($this->materializeColumnName($column, true), $likeOperator, '%' . $token . '%');
+        $query->orWhereRaw($sql, ['%' . $token . '%']);
+    }
+
+    private function hasUnaccent(): bool
+    {
+        if ($this->unaccentAvailable === null) {
+            $this->unaccentAvailable = $this->databaseManager->connection()
+                ->selectOne("SELECT 1 AS present FROM pg_extension WHERE extname = 'unaccent'") !== null;
+        }
+
+        return $this->unaccentAvailable;
     }
 
     private function buildPaginationAndGetResult(Collection $columns): LengthAwarePaginator|Collection

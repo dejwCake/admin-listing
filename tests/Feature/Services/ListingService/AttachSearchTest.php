@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Brackets\AdminListing\Tests\Feature\Services\ListingService;
 
 use Brackets\AdminListing\Tests\TestCase;
+use Brackets\AdminListing\Tests\TestModel;
+use Brackets\AdminListing\Tests\TestTranslatableModel;
 
 class AttachSearchTest extends TestCase
 {
@@ -143,5 +145,84 @@ class AttachSearchTest extends TestCase
             ->get();
 
         self::assertCount(0, $result);
+    }
+
+    public function testSearchIsCaseInsensitive(): void
+    {
+        $result = $this->listing
+            ->attachSearch('alpha', ['id', 'name', 'color'])
+            ->get();
+
+        self::assertCount(1, $result);
+    }
+
+    public function testSearchIsCaseInsensitiveOnATranslatedColumn(): void
+    {
+        $result = $this->translatedListing
+            ->attachSearch('alpha', ['id', 'name', 'color'])
+            ->get();
+
+        self::assertCount(1, $result);
+    }
+
+    public function testSearchIsAccentInsensitive(): void
+    {
+        if (!$this->supportsAccentInsensitiveSearch()) {
+            self::markTestSkipped('Connection cannot match accented and unaccented text');
+        }
+
+        $this->createAccentedModel();
+
+        $result = $this->listing
+            ->attachSearch('ulozit', ['id', 'name', 'color'])
+            ->get();
+
+        self::assertCount(1, $result);
+    }
+
+    public function testSearchIsAccentInsensitiveOnATranslatedColumn(): void
+    {
+        if (!$this->supportsAccentInsensitiveSearch()) {
+            self::markTestSkipped('Connection cannot match accented and unaccented text');
+        }
+
+        $this->createAccentedTranslatableModel();
+
+        $result = $this->translatedListing
+            ->attachSearch('ulozit', ['id', 'name', 'color'])
+            ->get();
+
+        self::assertCount(1, $result);
+    }
+
+    public function testSearchStillMatchesTheAccentedSpellingItself(): void
+    {
+        $this->createAccentedModel();
+
+        $result = $this->listing
+            ->attachSearch('Uložiť', ['id', 'name', 'color'])
+            ->get();
+
+        self::assertCount(1, $result);
+    }
+
+    private function createAccentedModel(): void
+    {
+        TestModel::create([
+            'name' => 'Uložiť',
+            'color' => 'modrá',
+            'number' => 777,
+            'published_at' => '2000-06-01 00:00:00',
+        ]);
+    }
+
+    private function createAccentedTranslatableModel(): void
+    {
+        TestTranslatableModel::create([
+            'name' => ['en' => 'Uložiť', 'sk' => 'Uložiť'],
+            'color' => ['en' => 'modrá', 'sk' => 'modrá'],
+            'number' => 777,
+            'published_at' => '2000-06-01 00:00:00',
+        ]);
     }
 }
