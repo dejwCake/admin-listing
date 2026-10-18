@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Brackets\AdminListing\Tests\Feature\Services\ListingService;
 
+use Brackets\AdminListing\Builders\ListingQueryBuilder;
 use Brackets\AdminListing\Dtos\ListingQuery;
 use Brackets\AdminListing\Tests\TestCase;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -23,6 +25,37 @@ class ProcessRequestAndGetTest extends TestCase
 
         self::assertInstanceOf(LengthAwarePaginator::class, $result);
         self::assertCount(10, $result);
+    }
+
+    /**
+     * `searchIn` is nullable and defaults to null in ListingQueryBuilder, but attachSearch() takes
+     * an array -- so until it was normalised, the builder's own default threw a TypeError here.
+     */
+    public function testProcessRequestWithTheBuildersDefaultSearchIn(): void
+    {
+        $listingQuery = $this->app->make(ListingQueryBuilder::class)
+            ->fromRequest(Request::create('/test', 'GET'), ['id', 'name']);
+
+        self::assertNull($listingQuery->searchIn);
+
+        $result = $this->listing->processRequestAndGet($listingQuery);
+
+        self::assertInstanceOf(LengthAwarePaginator::class, $result);
+        self::assertCount(10, $result);
+    }
+
+    public function testProcessRequestWithANullSearchInAndASearchTerm(): void
+    {
+        $listingQuery = new ListingQuery(
+            columns: ['*'],
+            searchIn: null,
+            search: 'yellow',
+        );
+
+        $result = $this->listing->processRequestAndGet($listingQuery);
+
+        self::assertInstanceOf(LengthAwarePaginator::class, $result);
+        self::assertCount(10, $result, 'With no columns to search in, the term is ignored.');
     }
 
     public function testProcessRequestWithOrdering(): void

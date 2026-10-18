@@ -63,7 +63,7 @@ final class ListingService implements Listing
     ): LengthAwarePaginator|Collection {
         $this->attachOrdering($listingQuery->orderBy, $listingQuery->orderDirection)->attachSearch(
             $listingQuery->search,
-            $listingQuery->searchIn,
+            $listingQuery->searchIn ?? [],
         );
 
         // attach pagination only when bulk filter is disabled

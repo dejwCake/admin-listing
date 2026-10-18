@@ -6,6 +6,7 @@ namespace Brackets\AdminListing\Tests\Feature\Builders;
 
 use Brackets\AdminListing\Builders\ListingQueryBuilder;
 use Brackets\AdminListing\Dtos\ListingQuery;
+use Brackets\AdminListing\Enums\OrderDirection;
 use Brackets\AdminListing\Tests\TestCase;
 use Illuminate\Http\Request;
 use Override;
@@ -82,6 +83,54 @@ class ListingQueryBuilderTest extends TestCase
         );
 
         self::assertEquals('created_at', $listingQuery->orderBy);
+    }
+
+    public function testFromRequestWithCustomDefaultOrderDirection(): void
+    {
+        $request = Request::create('/test', 'GET');
+
+        $listingQuery = $this->listingQueryBuilder->fromRequest(
+            $request,
+            ['*'],
+            null,
+            'created_at',
+            OrderDirection::Desc,
+        );
+
+        self::assertEquals('created_at', $listingQuery->orderBy);
+        self::assertEquals('desc', $listingQuery->orderDirection);
+    }
+
+    public function testRequestOrderDirectionWinsOverTheDefault(): void
+    {
+        $request = Request::create('/test', 'GET', ['orderDirection' => 'asc']);
+
+        $listingQuery = $this->listingQueryBuilder->fromRequest(
+            $request,
+            ['*'],
+            null,
+            'id',
+            OrderDirection::Desc,
+        );
+
+        self::assertEquals('asc', $listingQuery->orderDirection);
+    }
+
+    public function testUnrecognisedOrderDirectionFallsBackToTheDefault(): void
+    {
+        foreach (['sideways', 'DESC', 'desc ', ''] as $orderDirection) {
+            $request = Request::create('/test', 'GET', ['orderDirection' => $orderDirection]);
+
+            $listingQuery = $this->listingQueryBuilder->fromRequest(
+                $request,
+                ['*'],
+                null,
+                'id',
+                OrderDirection::Desc,
+            );
+
+            self::assertEquals('desc', $listingQuery->orderDirection, $orderDirection);
+        }
     }
 
     public function testFromRequestWithNullSearchIn(): void
