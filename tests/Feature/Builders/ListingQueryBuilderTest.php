@@ -10,6 +10,7 @@ use Brackets\AdminListing\Enums\OrderDirection;
 use Brackets\AdminListing\Tests\TestCase;
 use Illuminate\Http\Request;
 use Override;
+use PHPUnit\Framework\Attributes\TestWith;
 
 class ListingQueryBuilderTest extends TestCase
 {
@@ -101,9 +102,13 @@ class ListingQueryBuilderTest extends TestCase
         self::assertEquals('desc', $listingQuery->orderDirection);
     }
 
-    public function testRequestOrderDirectionWinsOverTheDefault(): void
+    #[TestWith(['asc'])]
+    #[TestWith(['ASC'])]
+    #[TestWith(['Asc'])]
+    #[TestWith([' asc '])]
+    public function testRequestOrderDirectionWinsOverTheDefault(string $orderDirection): void
     {
-        $request = Request::create('/test', 'GET', ['orderDirection' => 'asc']);
+        $request = Request::create('/test', 'GET', ['orderDirection' => $orderDirection]);
 
         $listingQuery = $this->listingQueryBuilder->fromRequest(
             $request,
@@ -116,21 +121,25 @@ class ListingQueryBuilderTest extends TestCase
         self::assertEquals('asc', $listingQuery->orderDirection);
     }
 
-    public function testUnrecognisedOrderDirectionFallsBackToTheDefault(): void
+    /**
+     * @param string|array<string> $orderDirection
+     */
+    #[TestWith(['sideways'])]
+    #[TestWith([''])]
+    #[TestWith([['asc']])]
+    public function testUnrecognisedOrderDirectionFallsBackToTheDefault(string|array $orderDirection): void
     {
-        foreach (['sideways', 'DESC', 'desc ', ''] as $orderDirection) {
-            $request = Request::create('/test', 'GET', ['orderDirection' => $orderDirection]);
+        $request = Request::create('/test', 'GET', ['orderDirection' => $orderDirection]);
 
-            $listingQuery = $this->listingQueryBuilder->fromRequest(
-                $request,
-                ['*'],
-                null,
-                'id',
-                OrderDirection::Desc,
-            );
+        $listingQuery = $this->listingQueryBuilder->fromRequest(
+            $request,
+            ['*'],
+            null,
+            'id',
+            OrderDirection::Desc,
+        );
 
-            self::assertEquals('desc', $listingQuery->orderDirection, $orderDirection);
-        }
+        self::assertEquals('desc', $listingQuery->orderDirection);
     }
 
     public function testFromRequestWithNullSearchIn(): void

@@ -41,6 +41,6 @@ final readonly class ListingQueryBuilder
             return $default;
         }
 
-        return OrderDirection::tryFrom($orderDirection) ?? $default;
+        return OrderDirection::tryFrom(strtolower(trim($orderDirection))) ?? $default;
     }
 }
