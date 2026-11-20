@@ -247,21 +247,26 @@ final class ListingService implements Listing
 
         $tokens->each(function (string $token) use ($searchIn): void {
             $this->query->where(function (Builder $query) use ($token, $searchIn): void {
-                $searchIn->each(function (array $column) use ($token, $query): void {
-                    // FIXME try to find out how to customize this default behaviour
-                    if (
-                        $this->model->getKeyName() === $column['column']
-                        && $this->model->getTable() === $column['table']
-                    ) {
-                        if (is_numeric($token) && $token === strval(intval($token))) {
-                            $query->orWhere($this->materializeColumnName($column, true), intval($token));
-                        }
-                    } else {
-                        $this->searchLike($query, $column, $token);
-                    }
-                });
+                $searchIn->each(fn (array $column) => $this->searchColumn($query, $column, $token));
             });
         });
+    }
+
+    /**
+     * The primary key matches only a whole number; any other column is searched with LIKE.
+     */
+    private function searchColumn(Builder $query, array $column, string $token): void
+    {
+        // FIXME try to find out how to customize this default behaviour
+        if ($this->model->getKeyName() !== $column['column'] || $this->model->getTable() !== $column['table']) {
+            $this->searchLike($query, $column, $token);
+
+            return;
+        }
+
+        if (is_numeric($token) && $token === strval(intval($token))) {
+            $query->orWhere($this->materializeColumnName($column, true), intval($token));
+        }
     }
 
     private function searchLike(Builder $query, array $column, string $token): void
